@@ -1,24 +1,13 @@
+DROP DATABASE IF EXISTS vodenje_trgovine;
+CREATE DATABASE vodenje_trgovine;
+USE vodenje_trgovine; 
+
 CREATE TABLE proizvod (
-	id INT AUTO_INCREMENT PRIMARY KEY,
+    id INT AUTO_INCREMENT PRIMARY KEY,
     naziv VARCHAR(255) NOT NULL,
     opis VARCHAR(500),
     cijena INT NOT NULL, -- Cijena proizvoda u centima
 	CHECK (cijena > 0) -- Cijena mora biti veća od 0
-);
-
-CREATE TABLE slika (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    putanja VARCHAR(255) NOT NULL UNIQUE,
-    naziv VARCHAR(255) NOT NULL,
-    opis VARCHAR(500)
-);
-
-CREATE TABLE slika_proizvod (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    proizvod_id INT NOT NULL,
-    slika_id INT NOT NULL,
-    FOREIGN KEY (proizvod_id) REFERENCES proizvod(id),
-    FOREIGN KEY (slika_id) REFERENCES slika(id),
 );
 
 CREATE TABLE kategorija (
@@ -67,7 +56,7 @@ CREATE TABLE narudzba_proizvod (
     cijena INT NOT NULL, -- Cijena proizvoda u centima
     FOREIGN KEY (narudzba_id) REFERENCES narudzba(id),
     FOREIGN KEY (proizvod_id) REFERENCES proizvod(id),
-    UNIQUE (narudzba_id, proizvod_id),
+    UNIQUE (narudzba_id, proizvod_id)
 );
 
 CREATE TABLE uplata (
@@ -76,7 +65,7 @@ CREATE TABLE uplata (
     iznos INT NOT NULL, -- Iznos transakcije u centima
     datum DATETIME DEFAULT CURRENT_TIMESTAMP,
     status ENUM('uspješna', 'neuspješna') DEFAULT 'uspješna',
-    FOREIGN KEY (narudzba_id) REFERENCES narudzba(id),
+    FOREIGN KEY (narudzba_id) REFERENCES narudzba(id)
 );
 
 CREATE TABLE recenzija (
@@ -87,7 +76,7 @@ CREATE TABLE recenzija (
     komentar VARCHAR(500),
     datum DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (proizvod_id) REFERENCES proizvod(id),
-    FOREIGN KEY (korisnik_id) REFERENCES korisnik(id),
+    FOREIGN KEY (korisnik_id) REFERENCES korisnik(id)
 );
 
 -- Kuponi mogu imati različite tipove (fiksni iznos, postotak popusta, besplatna dostava)
@@ -134,7 +123,7 @@ CREATE TABLE wishlist_proizvod (
     proizvod_id INT NOT NULL,
     FOREIGN KEY (wishlist_id) REFERENCES wishlist(id),
     FOREIGN KEY (proizvod_id) REFERENCES proizvod(id),
-    UNIQUE (wishlist_id, proizvod_id),
+    UNIQUE (wishlist_id, proizvod_id)
 );
 
 CREATE TABLE skladiste (
@@ -160,7 +149,7 @@ CREATE TABLE povijest_cijena (
     proizvod_id INT NOT NULL,
     cijena INT NOT NULL, -- Cijena proizvoda u centima
     datum DATETIME DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (proizvod_id) REFERENCES proizvod(id),
+    FOREIGN KEY (proizvod_id) REFERENCES proizvod(id)
 );
 
 CREATE TABLE povijest_zaliha (
@@ -171,7 +160,14 @@ CREATE TABLE povijest_zaliha (
     datum DATETIME DEFAULT CURRENT_TIMESTAMP,
     opis VARCHAR(255),
     FOREIGN KEY (skladiste_id) REFERENCES skladiste(id),
-    FOREIGN KEY (proizvod_id) REFERENCES proizvod(id),
+    FOREIGN KEY (proizvod_id) REFERENCES proizvod(id)
+);
+
+CREATE TABLE kurirska_sluzba (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    naziv VARCHAR(255) NOT NULL UNIQUE,
+    opis VARCHAR(500),
+    kontakt VARCHAR(255)
 );
 
 CREATE TABLE dostava (
@@ -188,13 +184,5 @@ CREATE TABLE dostava (
     vrijeme_dostave INT,
     FOREIGN KEY (narudzba_id) REFERENCES narudzba(id),
     FOREIGN KEY (kurirska_sluzba_id) REFERENCES kurirska_sluzba(id),
-    CHECK (vrijeme_dostave > 0), -- Vrijeme dostave mora biti veće od 0
+    CHECK (vrijeme_dostave > 0) -- Vrijeme dostave mora biti veće od 0
 );
-
-CREATE TABLE kurirska_sluzba (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    naziv VARCHAR(255) NOT NULL UNIQUE,
-    opis VARCHAR(500),
-    kontakt VARCHAR(255)
-);
-
