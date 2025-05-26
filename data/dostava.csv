@@ -1,0 +1,109 @@
+id,naziv,status,narudzba_id,cijena,opis,datum_kreiranja,datum_slanja,datum_dostave,kurirska_sluzba_id,vrijeme_dostave
+1,Dostava za narudžbu 1,isporučeno,1,1299,Brza dostava.,2025-01-03 07:15:10,2025-10-25 02:32:49,2025-04-17 06:10:54,8,174
+2,Dostava za narudžbu 2,u transportu,2,362,Prioritetna dostava.,2025-01-06 05:11:45,2025-02-17 11:41:47,2025-02-21 13:41:47,3,4
+3,Dostava za narudžbu 3,isporučeno,3,1395,Standardna dostava.,2025-01-08 20:05:33,2025-01-11 18:23:05,2025-11-05 03:14:02,3,298
+4,Dostava za narudžbu 5,isporučeno,5,366,Standardna dostava.,2025-01-14 03:18:27,2025-03-14 16:06:29,2025-05-14 12:42:32,10,60
+5,Dostava za narudžbu 6,isporučeno,6,1399,Brza dostava.,2025-01-15 20:55:12,2025-04-15 05:31:33,2025-06-14 19:27:10,5,60
+6,Dostava za narudžbu 7,u transportu,7,413,Brza dostava.,2025-01-19 05:33:50,2025-10-30 10:23:32,2025-11-02 14:23:32,7,3
+7,Dostava za narudžbu 8,isporučeno,8,906,Brza dostava.,2025-01-21 09:21:09,2025-03-12 17:05:00,2025-02-04 10:49:37,10,328
+8,Dostava za narudžbu 9,isporučeno,9,359,Prioritetna dostava.,2025-01-23 06:10:44,2025-05-09 10:12:27,2025-07-19 04:38:50,4,70
+9,Dostava za narudžbu 10,isporučeno,10,503,Brza dostava.,2025-01-26 11:47:36,2025-04-14 19:04:00,2025-05-16 11:50:53,6,31
+10,Dostava za narudžbu 11,isporučeno,11,578,Prioritetna dostava.,2025-01-27 01:00:00,2025-07-29 04:47:03,2025-02-27 16:46:51,10,213
+11,Dostava za narudžbu 12,u transportu,12,814,Brza dostava.,2025-01-27 18:30:00,2025-04-15 19:09:56,2025-04-17 05:09:56,5,1
+12,Dostava za narudžbu 13,isporučeno,13,1134,Prioritetna dostava.,2025-01-28 13:45:00,2025-12-20 07:07:47,2025-02-12 06:58:41,9,53
+13,Dostava za narudžbu 15,isporučeno,15,945,Prioritetna dostava.,2025-01-30 16:15:00,2025-05-03 08:00:40,2025-11-19 11:37:58,2,200
+14,Dostava za narudžbu 16,isporučeno,16,878,Prioritetna dostava.,2025-02-02 13:30:00,2025-05-24 17:39:01,2025-07-03 18:48:07,9,40
+15,Dostava za narudžbu 17,u transportu,17,1180,Brza dostava.,2025-02-04 00:45:00,2025-06-08 08:55:05,2025-06-12 08:55:05,9,4
+16,Dostava za narudžbu 18,isporučeno,18,1401,Standardna dostava.,2025-02-05 10:00:00,2025-02-15 17:23:13,2025-05-18 07:19:37,5,457
+17,Dostava za narudžbu 20,isporučeno,20,482,Brza dostava.,2025-02-06 18:30:00,2025-03-21 22:12:53,2025-06-25 05:23:41,2,95
+18,Dostava za narudžbu 21,isporučeno,21,323,Standardna dostava.,2025-02-08 00:45:00,2025-03-25 07:39:55,2025-04-20 06:34:42,3,25
+19,Dostava za narudžbu 22,naručeno,22,598,Prioritetna dostava.,2025-02-09 02:00:00,2025-02-11 15:00:00,2025-02-15 03:00:00,2,3
+20,Dostava za narudžbu 23,isporučeno,23,451,Prioritetna dostava.,2025-02-10 11:15:00,2025-04-12 14:30:08,2025-04-23 04:15:52,8,375
+21,Dostava za narudžbu 24,isporučeno,24,1286,Brza dostava.,2025-02-11 03:30:00,2025-06-21 05:20:06,2025-05-02 15:58:30,1,315
+22,Dostava za narudžbu 26,isporučeno,26,896,Standardna dostava.,2025-02-12 12:15:00,2025-10-04 06:20:39,2025-04-03 02:54:24,1,180
+23,Dostava za narudžbu 27,isporučeno,27,305,Brza dostava.,2025-02-14 04:30:00,2025-02-14 23:15:35,2025-02-16 05:31:53,1,1
+24,Dostava za narudžbu 28,u transportu,28,1347,Standardna dostava.,2025-02-14 14:45:00,2025-03-14 20:25:36,2025-03-18 05:25:36,4,3
+25,Dostava za narudžbu 29,isporučeno,29,1107,Standardna dostava.,2025-02-16 08:00:00,2025-07-20 03:26:47,2025-02-25 09:45:23,5,220
+26,Dostava za narudžbu 30,isporučeno,30,1255,Brza dostava.,2025-02-17 02:15:00,2025-04-14 17:21:39,2025-11-04 08:52:14,6,203
+27,Dostava za narudžbu 32,isporučeno,32,422,Prioritetna dostava.,2025-02-18 22:45:00,2025-04-24 03:40:59,2025-05-28 05:21:07,5,34
+28,Dostava za narudžbu 33,isporučeno,33,888,Brza dostava.,2025-02-20 02:00:00,2025-04-04 06:44:33,2025-06-15 13:20:49,3,72
+29,Dostava za narudžbu 34,u transportu,34,761,Prioritetna dostava.,2025-02-20 15:15:00,2025-05-09 10:51:06,2025-05-14 20:51:06,10,5
+30,Dostava za narudžbu 35,isporučeno,35,365,Standardna dostava.,2025-02-22 09:30:00,2025-04-02 17:35:50,2025-09-09 03:21:01,9,159
+31,Dostava za narudžbu 36,isporučeno,36,817,Brza dostava.,2025-02-22 18:45:00,2025-02-24 17:37:40,2025-02-26 20:56:06,8,2
+32,Dostava za narudžbu 38,isporučeno,38,530,Brza dostava.,2025-02-25 07:15:00,2025-05-29 21:11:09,2025-12-11 03:48:35,6,195
+33,Dostava za narudžbu 39,isporučeno,39,1180,Standardna dostava.,2025-02-26 00:30:00,2025-07-08 19:00:49,2025-02-22 22:33:50,6,229
+34,Dostava za narudžbu 40,u transportu,40,1244,Standardna dostava.,2025-02-26 20:45:00,2025-03-21 01:36:17,2025-03-25 12:36:17,3,4
+35,Dostava za narudžbu 41,isporučeno,41,403,Prioritetna dostava.,2025-02-28 07:00:00,2025-05-27 09:07:35,2025-07-03 15:29:18,1,37
+36,Dostava za narudžbu 42,isporučeno,42,387,Standardna dostava.,2025-02-29 02:15:00,2025-03-11 16:13:03,2025-05-20 17:49:41,6,435
+37,Dostava za narudžbu 44,isporučeno,44,1266,Standardna dostava.,2025-03-02 18:45:00,2025-03-28 13:01:26,2025-03-29 03:04:26,1,1
+38,Dostava za narudžbu 45,isporučeno,45,1306,Standardna dostava.,2025-03-03 19:00:00,2025-04-26 23:56:39,2025-08-19 18:56:30,7,114
+39,Dostava za narudžbu 46,u transportu,46,821,Prioritetna dostava.,2025-03-04 17:15:00,2025-02-23 20:23:41,2025-03-01 02:23:41,4,5
+40,Dostava za narudžbu 47,isporučeno,47,383,Standardna dostava.,2025-03-06 09:30:00,2025-01-30 03:24:51,2025-01-31 15:28:50,6,1
+41,Dostava za narudžbu 48,isporučeno,48,445,Brza dostava.,2025-03-06 21:45:00,2025-09-29 10:47:04,2025-10-12 19:49:56,3,13
+42,Dostava za narudžbu 50,isporučeno,50,1259,Brza dostava.,2025-03-09 06:15:00,2025-03-31 09:57:22,2025-04-15 10:06:07,4,15
+43,Dostava za narudžbu 51,isporučeno,51,927,Standardna dostava.,2025-03-09 12:30:00,2025-07-24 09:22:15,2025-09-05 04:24:11,3,42
+44,Dostava za narudžbu 52,naručeno,52,857,Standardna dostava.,2025-03-10 20:45:00,,,8,1
+45,Dostava za narudžbu 53,isporučeno,53,1308,Standardna dostava.,2025-03-12 06:00:00,2025-09-11 08:52:04,2025-12-30 01:24:53,3,109
+46,Dostava za narudžbu 54,isporučeno,54,872,Standardna dostava.,2025-03-12 19:15:00,2025-03-20 12:04:46,2025-03-31 07:22:00,6,10
+47,Dostava za narudžbu 56,isporučeno,56,614,Brza dostava.,2025-03-15 13:45:00,2025-07-08 17:48:12,2025-08-26 15:28:01,5,48
+48,Dostava za narudžbu 57,isporučeno,57,387,Prioritetna dostava.,2025-03-16 03:00:00,2025-02-22 02:50:48,2025-03-24 01:24:12,2,29
+49,Dostava za narudžbu 58,naručeno,58,1109,Brza dostava.,2025-03-16 20:15:00,2025-03-17 14:15:00,2025-03-20 22:15:00,2,3
+50,Dostava za narudžbu 59,isporučeno,59,797,Brza dostava.,2025-03-17 17:30:00,2025-08-08 21:07:39,2025-08-28 03:17:00,6,19
+51,Dostava za narudžbu 60,isporučeno,60,1272,Brza dostava.,2025-03-18 17:45:00,2025-03-28 18:08:01,2025-11-03 14:24:22,10,219
+52,Dostava za narudžbu 62,isporučeno,62,1219,Prioritetna dostava.,2025-03-20 16:15:00,2025-05-27 20:45:07,2025-06-02 16:58:20,3,5
+53,Dostava za narudžbu 63,isporučeno,63,1442,Prioritetna dostava.,2025-03-22 13:30:00,2025-04-22 05:34:26,2025-05-06 14:33:56,1,14
+54,Dostava za narudžbu 64,naručeno,64,1187,Standardna dostava.,2025-03-23 06:45:00,2025-03-23 23:45:00,2025-03-29 01:45:00,8,5
+55,Dostava za narudžbu 65,isporučeno,65,833,Prioritetna dostava.,2025-03-24 08:00:00,2025-09-25 19:06:56,2025-10-05 07:07:45,8,9
+56,Dostava za narudžbu 66,isporučeno,66,1216,Brza dostava.,2025-03-24 23:15:00,2025-05-11 15:16:19,2025-07-16 03:30:19,10,65
+57,Dostava za narudžbu 68,isporučeno,68,745,Standardna dostava.,2025-03-26 22:45:00,2025-04-05 09:43:50,2025-02-05 14:06:02,5,306
+58,Dostava za narudžbu 69,isporučeno,69,369,Brza dostava.,2025-03-27 18:00:00,2025-09-23 07:10:46,2025-10-13 09:35:35,1,20
+59,Dostava za narudžbu 70,u transportu,70,638,Prioritetna dostava.,2025-03-28 23:15:00,2025-02-22 21:48:25,2025-02-26 07:48:25,10,3
+60,Dostava za narudžbu 71,isporučeno,71,1455,Standardna dostava.,2025-03-29 22:30:00,2025-04-25 19:03:31,2025-03-01 15:32:10,2,309
+61,Dostava za narudžbu 72,isporučeno,72,1209,Standardna dostava.,2025-03-31 12:45:00,2025-04-18 13:35:19,2025-02-18 23:40:20,9,306
+62,Dostava za narudžbu 74,isporučeno,74,1286,Brza dostava.,2025-04-01 17:15:00,2025-05-13 01:14:13,2025-10-13 11:45:19,1,153
+63,Dostava za narudžbu 75,isporučeno,75,1497,Brza dostava.,2025-04-03 02:30:00,2025-06-06 13:59:19,2025-12-26 16:49:13,7,203
+64,Dostava za narudžbu 76,u transportu,76,465,Prioritetna dostava.,2025-04-03 23:45:00,2025-08-01 09:46:47,2025-08-05 21:46:47,4,4
+65,Dostava za narudžbu 77,isporučeno,77,604,Brza dostava.,2025-04-04 20:00:00,2025-05-25 13:23:36,2025-08-08 09:49:27,2,74
+66,Dostava za narudžbu 78,isporučeno,78,1240,Brza dostava.,2025-04-06 01:15:00,2025-07-20 12:21:17,2025-12-12 10:44:36,6,144
+67,Dostava za narudžbu 80,isporučeno,80,340,Standardna dostava.,2025-04-07 21:45:00,2025-05-14 21:48:04,2025-08-28 21:16:06,2,105
+68,Dostava za narudžbu 81,isporučeno,81,1379,Brza dostava.,2025-04-09 05:00:00,2025-08-17 10:45:08,2025-12-27 14:23:23,9,132
+69,Dostava za narudžbu 82,u transportu,82,1359,Brza dostava.,2025-04-09 22:15:00,2025-06-21 19:01:53,2025-06-24 02:01:53,6,2
+70,Dostava za narudžbu 83,isporučeno,83,1483,Standardna dostava.,2025-04-11 06:30:00,2025-12-20 15:39:18,2025-01-07 06:11:36,6,17
+71,Dostava za narudžbu 84,isporučeno,84,887,Prioritetna dostava.,2025-04-11 18:45:00,2025-06-09 12:14:03,2025-01-27 22:31:12,10,232
+72,Dostava za narudžbu 86,isporučeno,86,1406,Brza dostava.,2025-04-14 01:15:00,2025-05-31 23:56:33,2025-06-13 05:11:00,10,12
+73,Dostava za narudžbu 87,isporučeno,87,1248,Brza dostava.,2025-04-15 11:30:00,2025-05-16 13:44:56,2025-06-27 21:47:14,6,42
+74,Dostava za narudžbu 88,u transportu,88,520,Prioritetna dostava.,2025-04-16 11:45:00,2025-05-08 13:28:47,2025-05-09 22:28:47,4,1
+75,Dostava za narudžbu 89,isporučeno,89,1477,Prioritetna dostava.,2025-04-17 09:00:00,2025-05-14 19:52:28,2025-05-21 04:31:30,3,6
+76,Dostava za narudžbu 90,isporučeno,90,421,Standardna dostava.,2025-04-17 18:15:00,2025-04-29 16:58:14,2025-06-23 05:56:17,9,54
+77,Dostava za narudžbu 92,isporučeno,92,1123,Prioritetna dostava.,2025-04-19 19:45:00,2025-08-07 23:05:55,2025-10-16 10:32:07,4,69
+78,Dostava za narudžbu 93,isporučeno,93,849,Brza dostava.,2025-04-21 09:00:00,2025-06-22 02:46:09,2025-02-09 14:12:54,5,232
+79,Dostava za narudžbu 94,u transportu,94,1319,Prioritetna dostava.,2025-04-22 02:15:00,2025-01-20 21:42:29,2025-01-24 06:42:29,7,3
+80,Dostava za narudžbu 95,isporučeno,95,1322,Brza dostava.,2025-04-23 08:30:00,2025-10-12 12:37:35,2025-01-21 17:25:43,7,101
+81,Dostava za narudžbu 96,isporučeno,96,1357,Prioritetna dostava.,2025-04-24 01:45:00,2025-05-08 08:56:56,2025-06-05 05:11:58,1,27
+82,Dostava za narudžbu 98,isporučeno,98,1252,Prioritetna dostava.,2025-04-25 14:15:00,2025-10-21 11:30:11,2025-12-28 00:47:28,1,67
+83,Dostava za narudžbu 99,isporučeno,99,1144,Standardna dostava.,2025-04-27 08:30:00,2025-07-11 19:39:51,2025-07-20 13:16:16,6,8
+84,Dostava za narudžbu 100,naručeno,100,673,Brza dostava.,2025-04-28 03:45:00,2025-04-30 19:45:00,2025-05-03 20:45:00,2,3
+85,Dostava za narudžbu 101,isporučeno,101,979,Standardna dostava.,2025-04-28 14:00:00,2025-05-06 22:31:28,2025-05-08 13:02:20,1,1
+86,Dostava za narudžbu 102,isporučeno,102,794,Prioritetna dostava.,2025-04-29 18:15:00,2025-04-30 09:35:31,2025-08-03 11:06:28,3,95
+87,Dostava za narudžbu 104,isporučeno,104,973,Brza dostava.,2025-05-01 18:45:00,2025-06-05 19:38:01,2025-02-18 16:38:05,10,257
+88,Dostava za narudžbu 105,isporučeno,105,1035,Brza dostava.,2025-05-03 12:00:00,2025-05-26 08:59:07,2025-07-10 09:16:01,7,45
+89,Dostava za narudžbu 106,u transportu,106,933,Prioritetna dostava.,2025-05-03 16:15:00,2025-09-16 03:45:09,2025-09-21 11:45:09,8,5
+90,Dostava za narudžbu 107,isporučeno,107,627,Prioritetna dostava.,2025-05-04 19:30:00,2025-09-30 14:06:04,2025-02-06 14:31:26,9,129
+91,Dostava za narudžbu 108,isporučeno,108,1348,Standardna dostava.,2025-05-05 22:45:00,2025-05-24 07:58:12,2025-05-25 12:11:59,5,1
+92,Dostava za narudžbu 110,isporučeno,110,866,Standardna dostava.,2025-05-07 22:15:00,2025-08-03 20:36:30,2025-09-24 22:09:22,7,52
+93,Dostava za narudžbu 111,isporučeno,111,1314,Brza dostava.,2025-05-09 13:30:00,2025-06-21 09:01:58,2025-07-01 15:38:24,1,10
+94,Dostava za narudžbu 112,u transportu,112,427,Standardna dostava.,2025-05-10 14:45:00,2025-06-20 18:50:19,2025-06-25 19:50:19,1,5
+95,Dostava za narudžbu 113,isporučeno,113,1189,Standardna dostava.,2025-05-11 00:00:00,2025-11-17 22:35:15,2025-01-18 22:58:15,1,62
+96,Dostava za narudžbu 114,isporučeno,114,1242,Brza dostava.,2025-05-12 02:15:00,2025-09-19 19:35:49,2025-02-09 10:53:14,7,142
+97,Dostava za narudžbu 116,isporučeno,116,1414,Standardna dostava.,2025-05-14 07:45:00,2025-06-18 12:12:37,2025-07-01 09:41:43,2,12
+98,Dostava za narudžbu 117,isporučeno,117,1180,Brza dostava.,2025-05-15 10:00:00,2025-07-26 12:24:58,2025-09-11 17:31:16,3,47
+99,Dostava za narudžbu 118,naručeno,118,1139,Standardna dostava.,2025-05-16 13:15:00,2025-05-18 18:15:00,2025-05-24 05:15:00,10,5
+100,Dostava za narudžbu 119,isporučeno,119,1500,Brza dostava.,2025-05-17 14:30:00,2025-07-25 04:25:51,2025-10-06 04:06:04,2,72
+101,Dostava za narudžbu 120,isporučeno,120,1306,Brza dostava.,2025-05-18 09:45:00,2025-06-28 16:39:40,2025-02-26 02:32:11,6,242
+102,Dostava za narudžbu 122,isporučeno,122,763,Brza dostava.,2025-05-20 08:15:00,2025-11-07 14:36:28,2025-05-07 13:23:19,1,180
+103,Dostava za narudžbu 123,isporučeno,123,632,Standardna dostava.,2025-05-20 17:30:00,2025-01-29 08:56:22,2025-04-25 16:11:09,7,86
+104,Dostava za narudžbu 124,u transportu,124,1000,Standardna dostava.,2025-05-22 09:45:00,2025-09-21 15:30:01,2025-09-27 01:30:01,8,5
+105,Dostava za narudžbu 125,isporučeno,125,362,Prioritetna dostava.,2025-05-22 23:00:00,2025-08-31 18:54:02,2025-03-13 03:07:47,6,193
+106,Dostava za narudžbu 126,isporučeno,126,1332,Brza dostava.,2025-05-24 13:15:00,2025-01-10 17:56:30,2025-01-26 10:19:04,8,15
+107,Dostava za narudžbu 128,isporučeno,128,532,Prioritetna dostava.,2025-05-26 04:45:00,2025-06-05 01:13:47,2025-06-13 11:22:56,8,8
+108,Dostava za narudžbu 129,isporučeno,129,1223,Standardna dostava.,2025-05-27 14:00:00,2025-07-30 03:12:31,2025-08-15 22:36:21,3,16
