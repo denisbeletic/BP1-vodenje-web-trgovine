@@ -1,3 +1,4 @@
+DROP DATABASE IF EXISTS web_trgovina_bp1;
 CREATE DATABASE IF NOT EXISTS web_trgovina_bp1;
 USE web_trgovina_bp1;
 
@@ -97,6 +98,7 @@ CREATE TABLE recenzija (
 -- Postotak popusta - određeni postotak koji se oduzima od ukupne cijene narudžbe
 -- Besplatna dostava - kupon koji omogućava besplatnu dostavu
 -- Vrijednost kupona može biti 0 samo za besplatnu dostavu
+
 CREATE TABLE kupon (
     id INT AUTO_INCREMENT PRIMARY KEY,
     naziv VARCHAR(255) NOT NULL UNIQUE,
@@ -180,14 +182,6 @@ CREATE TABLE kurirska_sluzba (
     naziv VARCHAR(255) NOT NULL UNIQUE,
     opis VARCHAR(500),
     kontakt VARCHAR(255)
-    FOREIGN KEY (proizvod_id) REFERENCES proizvod(id)
-);
-
-CREATE TABLE kurirska_sluzba (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    naziv VARCHAR(255) NOT NULL UNIQUE,
-    opis VARCHAR(500),
-    kontakt VARCHAR(255)
 );
 
 CREATE TABLE dostava (
@@ -206,4 +200,3 @@ CREATE TABLE dostava (
     FOREIGN KEY (kurirska_sluzba_id) REFERENCES kurirska_sluzba(id),
     CHECK (vrijeme_dostave > 0) -- Vrijeme dostave mora biti veće od 0
 );
-
