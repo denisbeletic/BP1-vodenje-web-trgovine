@@ -108,7 +108,7 @@ INTO TABLE narudzba_proizvod
 FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '"'
 LINES TERMINATED BY '\r\n'
 IGNORE 1 ROWS
-(narudzba_id, proizvod_id, kolicina, cijena);
+(id, narudzba_id, proizvod_id, kolicina, cijena);
 
 LOAD DATA INFILE 'C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/data/uplata.csv'
 INTO TABLE uplata
@@ -143,17 +143,13 @@ INTO TABLE povijest_zaliha
 FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '"'
 LINES TERMINATED BY '\r\n'
 IGNORE 1 ROWS
-(id, proizvod_id, skladiste_id, datum, @dummy, kolicina)
-SET opis = NULL; -- Or set to a default string if preferred, as 'opis' is not in the CSV
+(id, proizvod_id, skladiste_id, datum, kolicina, opis);
 
 LOAD DATA INFILE 'C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/data/dostava.csv'
 INTO TABLE dostava
 FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '"'
 LINES TERMINATED BY '\r\n'
 IGNORE 1 ROWS
-(id, naziv, status, narudzba_id, cijena, opis, datum_kreiranja, @datum_slanja_var, @datum_dostave_var, kurirska_sluzba_id, vrijeme_dostave)
-SET 
-    datum_slanja = IF(@datum_slanja_var = '', NULL, @datum_slanja_var),
-    datum_dostave = IF(@datum_dostave_var = '', NULL, @datum_dostave_var);
+(id, naziv, status, narudzba_id, cijena, opis, datum_kreiranja, datum_slanja, datum_dostave, kurirska_sluzba_id);
 
 SELECT 'Data loading complete.' AS status;

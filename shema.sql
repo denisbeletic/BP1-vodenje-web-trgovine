@@ -195,8 +195,6 @@ CREATE TABLE dostava (
     datum_slanja DATETIME,
     datum_dostave DATETIME,
     kurirska_sluzba_id INT NOT NULL,
-    vrijeme_dostave INT,
     FOREIGN KEY (narudzba_id) REFERENCES narudzba(id),
-    FOREIGN KEY (kurirska_sluzba_id) REFERENCES kurirska_sluzba(id),
-    CHECK (vrijeme_dostave > 0) -- Vrijeme dostave mora biti veće od 0
+    FOREIGN KEY (kurirska_sluzba_id) REFERENCES kurirska_sluzba(id)
 );
