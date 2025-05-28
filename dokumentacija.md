@@ -14,13 +14,15 @@
 ## SADRŽAJ
 
 1. [UVOD](#1-uvod)  
-2. [ER DIJAGRAM](#2-er-dijagram)  
-3. [RELACIJSKI MODEL](#3-relacijski-model)  
-4. [EER DIJAGRAM](#4-eer-dijagram)  
-5. [TABLICE](#5-tabl-ice)
-6. [INICIJALIZACIJA](#6-inicijalizacija)  
-7. [UPITI](#7-upiti)  
-8. [ZAKLJUČAK](#8-zaključak)
+2. [OPIS POSLOVNOG PROCESA](#2-opis-poslovnog-procesa)
+3. [ER DIJAGRAM](#3-er-dijagram)  
+4. [RELACIJSKI MODEL](#4-relacijski-model)  
+5. [EER DIJAGRAM](#5-eer-dijagram)  
+6. [TABLICE](#6-tablice)
+7. [INICIJALIZACIJA](#7-inicijalizacija)  
+8. [UPITI](#8-upiti)  
+9. [ZAKLJUČAK](#9-zaključak)
+10. [OGRANIČENJA I MOGUĆNOSTI SUSTAVA](#10-ograničenja-i-mogućnosti-sustava)
 
 ---
 
@@ -34,13 +36,29 @@ Razlog odabira ove teme je rastuća popularnost online trgovina i potreba za kva
 
 ---
 
-## 2. ER DIJAGRAM
+## 2. OPIS POSLOVNOG PROCESA
+
+Poslovni proces kojeg smo ovdje modelirali, iako pojednostavljen i limitiran, vjerujemo da omogućuje učinkovito upravljanje ključnim entitetima i njihovim međusobnim odnosima.
+
+Proizvod je glavni entitet na kojeg smo se fokusirali i dali najviše pažnje. Tablica `PROIZVOD` sadrži osnovne informacije o artiklima dostupnim u trgovini, uključujući naziv, opis i cijenu. Za svakog proizvoda možemo dodati više slika. Svaki proizvod može također pripadati u više kategorija, koja grupiraju proizvode radi lakšeg pretraživanja. Evidentira se povijest promjena cijena proizvoda i povijest zaliha kako bismo imali podatke za naknadne analize.
+
+Korisnici sustava evidentirani su u tablici `KORISNIK`, koja pohranjuje njihove osobne podatke i kontakt informacije. Svaki korisnik može imati više lista želja koje omogućuju korisnicima spremanje željenih artikala za buduće narudžbe.
+
+Narudžbe su strukturirane kroz tablicu `NARUDZBA`, koja uključuje podatke o korisniku, datumu narudžbe, statusu i načinu plaćanja. Povezana je s tablicom `NARUDZBA_PROIZVOD`, koja detaljno opisuje artikle unutar pojedine narudžbe, te tablicom `UPLATA`, koja evidentira transakcije vezane uz narudžbe.
+
+Dostava narudžbi organizirana je kroz tablicu `DOSTAVA`, koja prati status dostave, troškove i vremenske podatke, te je povezana s tablicom `KURIRSKA_SLUZBA`, koja pohranjuje informacije o kurirskim službama. Promocije su implementirane kroz tablicu `KUPON`, koja omogućuje definiranje popusta, te tablicu `KUPON_NARUDZBA`, koja povezuje kupone s narudžbama.
+
+Projekt se temelji na relacijskom modelu, pri čemu su svi entiteti povezani stranim ključevima kako bi se osigurala referencijalna integracija podataka. Dizajn tablica omogućuje učinkovito upravljanje podacima, praćenje povijesti promjena i generiranje analitičkih izvještaja, čime se podržava optimizacija poslovanja web trgovine.
+
+---
+
+## 3. ER DIJAGRAM
 
 *[Umetni ER dijagram ili opiši veze između entiteta.]*
 
 ---
 
-## 3. RELACIJSKI MODEL
+## 4. RELACIJSKI MODEL
 
 ```sql
 PROIZVOD (id (PK), naziv, opis, cijena)
@@ -105,17 +123,17 @@ DOSTAVA (id (PK), status, narudzba_id (FK), cijena, opis, datum_kreiranja, datum
 
 ---
 
-## 4. EER DIJAGRAM
+## 5. EER DIJAGRAM
 
 ![EER dijagram](./EER%20diagram.png)
 
 ---
 
-## 5. TABLICE
+## 6. TABLICE
 
 Opis tablica korištenih u bazi podataka.
 
-### 5.1. PROIZVOD
+### 6.1. PROIZVOD
 Tablica `PROIZVOD` sadrži osnovne informacije o proizvodima dostupnim u web trgovini.
 - **Primarni ključ:** `id` - Jedinstveni identifikator proizvoda.
 - **Atributi:**
@@ -125,7 +143,7 @@ Tablica `PROIZVOD` sadrži osnovne informacije o proizvodima dostupnim u web trg
 - **Ograničenja:**
   - Provjera (`CHECK`) osigurava da cijena bude pozitivna vrijednost.
 
-### 5.2. SLIKA
+### 6.2. SLIKA
 Tablica `SLIKA` sadrži informacije o slikama proizvoda.
 - **Primarni ključ:** `id` - Jedinstveni identifikator slike.
 - **Atributi:**
@@ -133,28 +151,28 @@ Tablica `SLIKA` sadrži informacije o slikama proizvoda.
   - `naziv` - Naziv slike, opisuje sadržaj slike.
   - `opis` - Dodatni opis slike, opcionalan.
 
-### 5.3. SLIKA_PROIZVOD
+### 6.3. SLIKA_PROIZVOD
 Tablica `SLIKA_PROIZVOD` povezuje slike s proizvodima.
 - **Primarni ključ:** `id` - Jedinstveni identifikator veze između slike i proizvoda.
 - **Strani ključevi:**
   - `proizvod_id` - Referenca na tablicu `PROIZVOD`.
   - `slika_id` - Referenca na tablicu `SLIKA`.
 
-### 5.4. KATEGORIJA
+### 6.4. KATEGORIJA
 Tablica `KATEGORIJA` sadrži informacije o kategorijama proizvoda.
 - **Primarni ključ:** `id` - Jedinstveni identifikator kategorije.
 - **Atributi:**
   - `naziv` - Naziv kategorije, mora biti jedinstven.
   - `opis` - Detaljan opis kategorije, opcionalan.
 
-### 5.5. PROIZVOD_KATEGORIJA
+### 6.5. PROIZVOD_KATEGORIJA
 Tablica `PROIZVOD_KATEGORIJA` povezuje proizvode s kategorijama.
 - **Primarni ključ:** `id` - Jedinstveni identifikator veze između proizvoda i kategorije.
 - **Strani ključevi:**
   - `proizvod_id` - Referenca na tablicu `PROIZVOD`.
   - `kategorija_id` - Referenca na tablicu `KATEGORIJA`.
 
-### 5.6. KORISNIK
+### 6.6. KORISNIK
 Tablica `KORISNIK` sadrži informacije o korisnicima web trgovine.
 - **Primarni ključ:** `id` - Jedinstveni identifikator korisnika.
 - **Atributi:**
@@ -164,7 +182,7 @@ Tablica `KORISNIK` sadrži informacije o korisnicima web trgovine.
   - `lozinka` - Lozinka korisnika.
   - `adresa`, `grad`, `drzava`, `telefon` - Kontakt podaci korisnika, opcionalni.
 
-### 5.7. NARUDZBA
+### 6.7. NARUDZBA
 Tablica `NARUDZBA` sadrži informacije o narudžbama korisnika.
 - **Primarni ključ:** `id` - Jedinstveni identifikator narudžbe.
 - **Strani ključ:**
@@ -175,7 +193,7 @@ Tablica `NARUDZBA` sadrži informacije o narudžbama korisnika.
   - `ukupni_iznos` - Ukupna cijena narudžbe izražena u centima.
   - `nacin_placanja` - Način plaćanja (`kreditna kartica`, `pouzeće`, `bankovni transfer`).
 
-### 5.8. NARUDZBA_PROIZVOD
+### 6.8. NARUDZBA_PROIZVOD
 Tablica `NARUDZBA_PROIZVOD` povezuje narudžbe s proizvodima.
 - **Primarni ključ:** `id` - Jedinstveni identifikator veze između narudžbe i proizvoda.
 - **Strani ključevi:**
@@ -185,7 +203,7 @@ Tablica `NARUDZBA_PROIZVOD` povezuje narudžbe s proizvodima.
   - `kolicina` - Količina proizvoda u narudžbi.
   - `cijena` - Cijena proizvoda izražena u centima.
 
-### 5.9. UPLATA
+### 6.9. UPLATA
 Tablica `UPLATA` sadrži informacije o transakcijama vezanim uz narudžbe.
 - **Primarni ključ:** `id` - Jedinstveni identifikator uplate.
 - **Strani ključ:**
@@ -195,7 +213,7 @@ Tablica `UPLATA` sadrži informacije o transakcijama vezanim uz narudžbe.
   - `datum` - Datum transakcije.
   - `status` - Status transakcije (`uspješna`, `neuspješna`).
 
-### 5.10. RECENZIJA
+### 6.10. RECENZIJA
 Tablica `RECENZIJA` sadrži ocjene i komentare korisnika o proizvodima.
 - **Primarni ključ:** `id` - Jedinstveni identifikator recenzije.
 - **Strani ključevi:**
@@ -206,7 +224,7 @@ Tablica `RECENZIJA` sadrži ocjene i komentare korisnika o proizvodima.
   - `komentar` - Komentar korisnika.
   - `datum` - Datum recenzije.
 
-### 5.11. KUPON
+### 6.11. KUPON
 Tablica `KUPON` sadrži informacije o kuponima za popuste.
 - **Primarni ključ:** `id` - Jedinstveni identifikator kupona.
 - **Atributi:**
@@ -218,14 +236,14 @@ Tablica `KUPON` sadrži informacije o kuponima za popuste.
 - **Ograničenja:**
   - Provjera (`CHECK`) osigurava ispravne vrijednosti za svaki tip kupona.
 
-### 5.12. KUPON_NARUDZBA
+### 6.12. KUPON_NARUDZBA
 Tablica `KUPON_NARUDZBA` povezuje kupone s narudžbama.
 - **Primarni ključ:** `id` - Jedinstveni identifikator veze između kupona i narudžbe.
 - **Strani ključevi:**
   - `kupon_id` - Referenca na tablicu `KUPON`.
   - `narudzba_id` - Referenca na tablicu `NARUDZBA`.
 
-### 5.13. WISHLIST
+### 6.13. WISHLIST
 Tablica `WISHLIST` sadrži liste želja korisnika.
 - **Primarni ključ:** `id` - Jedinstveni identifikator liste želja.
 - **Strani ključ:**
@@ -234,21 +252,21 @@ Tablica `WISHLIST` sadrži liste želja korisnika.
   - `naziv` - Naziv liste želja.
   - `datum` - Datum kreiranja liste.
 
-### 5.14. WISHLIST_PROIZVOD
+### 6.14. WISHLIST_PROIZVOD
 Tablica `WISHLIST_PROIZVOD` povezuje proizvode s listama želja.
 - **Primarni ključ:** `id` - Jedinstveni identifikator veze između liste želja i proizvoda.
 - **Strani ključevi:**
   - `wishlist_id` - Referenca na tablicu `WISHLIST`.
   - `proizvod_id` - Referenca na tablicu `PROIZVOD`.
 
-### 5.15. SKLADISTE
+### 6.15. SKLADISTE
 Tablica `SKLADISTE` sadrži informacije o skladištima.
 - **Primarni ključ:** `id` - Jedinstveni identifikator skladišta.
 - **Atributi:**
   - `naziv` - Naziv skladišta, mora biti jedinstven.
   - `adresa`, `grad`, `drzava` - Lokacija skladišta.
 
-### 5.16. SKLADISTE_PROIZVOD
+### 6.16. SKLADISTE_PROIZVOD
 Tablica `SKLADISTE_PROIZVOD` povezuje proizvode sa skladištima.
 - **Primarni ključ:** `id` - Jedinstveni identifikator veze između skladišta i proizvoda.
 - **Strani ključevi:**
@@ -257,7 +275,7 @@ Tablica `SKLADISTE_PROIZVOD` povezuje proizvode sa skladištima.
 - **Atributi:**
   - `kolicina` - Količina proizvoda u skladištu.
 
-### 5.17. POVIJEST_CIJENA
+### 6.17. POVIJEST_CIJENA
 Tablica `POVIJEST_CIJENA` sadrži povijest promjena cijena proizvoda.
 - **Primarni ključ:** `id` - Jedinstveni identifikator promjene cijene.
 - **Strani ključ:**
@@ -266,7 +284,7 @@ Tablica `POVIJEST_CIJENA` sadrži povijest promjena cijena proizvoda.
   - `cijena` - Nova cijena proizvoda.
   - `datum` - Datum promjene cijene.
 
-### 5.18. POVIJEST_ZALIHA
+### 6.18. POVIJEST_ZALIHA
 Tablica `POVIJEST_ZALIHA` sadrži povijest promjena zaliha proizvoda u skladištima.
 - **Primarni ključ:** `id` - Jedinstveni identifikator promjene zaliha.
 - **Strani ključevi:**
@@ -277,7 +295,7 @@ Tablica `POVIJEST_ZALIHA` sadrži povijest promjena zaliha proizvoda u skladišt
   - `datum` - Datum promjene zaliha.
   - `opis` - Opis promjene.
 
-### 5.19. KURIRSKA_SLUZBA
+### 6.19. KURIRSKA_SLUZBA
 Tablica `KURIRSKA_SLUZBA` sadrži informacije o kurirskim službama.
 - **Primarni ključ:** `id` - Jedinstveni identifikator kurirske službe.
 - **Atributi:**
@@ -285,7 +303,7 @@ Tablica `KURIRSKA_SLUZBA` sadrži informacije o kurirskim službama.
   - `opis` - Detaljan opis kurirske službe.
   - `kontakt` - Kontakt informacije.
 
-### 5.20. DOSTAVA
+### 6.20. DOSTAVA
 Tablica `DOSTAVA` sadrži informacije o dostavama narudžbi.
 - **Primarni ključ:** `id` - Jedinstveni identifikator dostave.
 - **Strani ključevi:**
@@ -301,7 +319,7 @@ Tablica `DOSTAVA` sadrži informacije o dostavama narudžbi.
 
 ---
 
-## 6. INICIJALIZACIJA
+## 7. INICIJALIZACIJA
 
 Ovaj vodič objašnjava kako postaviti i pokrenuti projekt baze podataka za web trgovinu. Projekt koristi MySQL i sastoji se od SQL skripti za definiranje sheme baze podataka i učitavanje podataka iz CSV datoteka ili manualno kroz INSERT-ove.
 
@@ -350,7 +368,7 @@ Slijedite ove korake za postavljanje projekta kroz **CSV datoteke**:
 
 ---
 
-## 7. UPITI
+## 8. UPITI
 
 Napiši i objasni SQL upite koje si koristio u projektu, npr.:
 
@@ -364,8 +382,27 @@ Opis: *[Kratki opis što upit radi]*
 
 ---
 
-## 8. ZAKLJUČAK
+## 9. ZAKLJUČAK
 
 *[Zaključi dokumentaciju s razmatranjem naučenih lekcija, izazova, prednosti baze, mogućnosti primjene itd.]*
+
+---
+
+## 10. OGRANIČENJA I MOGUĆNOSTI SUSTAVA
+
+### Ograničenja
+
+1. **Performanse:** Sustav može imati poteškoća s performansama pri obradi velikih količina podataka ili istovremenom pristupu velikog broja korisnika.
+2. **Sigurnost:** Potrebno je dodatno osigurati podatke korisnika i transakcije kako bi se spriječile potencijalne prijetnje poput neovlaštenog pristupa ili curenja podataka.
+3. **Skalabilnost:** Sustav je dizajniran za male do srednje web trgovine i može zahtijevati značajne prilagodbe za podršku većim trgovinama.
+4. **Integracija:** Ograničena podrška za integraciju s vanjskim sustavima poput ERP-a ili CRM-a.
+
+### Mogućnosti
+
+1. **Upravljanje podacima:** Sustav omogućuje učinkovito upravljanje podacima o proizvodima, korisnicima, narudžbama, skladištima i dostavama.
+2. **Praćenje povijesti:** Povijest cijena i zaliha omogućuje analizu promjena i optimizaciju poslovanja.
+3. **Analitika:** Generiranje izvještaja o najprodavanijim proizvodima, najaktivnijim korisnicima i statistici kupona pruža korisne uvide za donošenje poslovnih odluka.
+4. **Fleksibilnost:** Sustav podržava različite načine plaćanja, dostave i promocije, prilagođavajući se potrebama korisnika.
+5. **Jednostavna integracija:** Sustav se može proširiti dodatnim funkcionalnostima poput API-ja za povezivanje s vanjskim aplikacijama.
 
 ---
