@@ -21,8 +21,7 @@
 6. [TABLICE](#6-tablice)
 7. [INICIJALIZACIJA](#7-inicijalizacija)  
 8. [UPITI](#8-upiti)  
-9. [ZAKLJUČAK](#9-zaključak)
-10. [OGRANIČENJA I MOGUĆNOSTI SUSTAVA](#10-ograničenja-i-mogućnosti-sustava)
+9. [ZAKLJUČAK](#9-zaključak)  
 
 ---
 
@@ -37,6 +36,9 @@ Razlog odabira ove teme je rastuća popularnost online trgovina i potreba za kva
 ---
 
 ## 2. OPIS POSLOVNOG PROCESA
+
+
+*----- Napisati malo bolje -----*
 
 Poslovni proces kojeg smo ovdje modelirali, iako pojednostavljen i limitiran, vjerujemo da omogućuje učinkovito upravljanje ključnim entitetima i njihovim međusobnim odnosima.
 
@@ -54,7 +56,123 @@ Projekt se temelji na relacijskom modelu, pri čemu su svi entiteti povezani str
 
 ## 3. ER DIJAGRAM
 
-*[Umetni ER dijagram ili opiši veze između entiteta.]*
+![ER dijagram](./ER%20diagram.png)
+
+---
+
+### 1. Korisnik i Narudžba
+- Veza: ima
+- Kardinalnost: 1:N
+    
+    Korisnik može imati više narudžbi.  
+    Narudžba pripada jednom korisniku.
+
+### 2. Korisnik i Recenzija
+- Veza: ostavlja
+- Kardinalnost: 1:N
+    
+    Korisnik može ostaviti više recenzija.  
+    Recenzija pripada jednom korisniku.
+
+### 3. Korisnik i Wishlist
+- Veza: ima
+- Kardinalnost: 1:N
+    
+    Korisnik može imati više wishlista.  
+    Wishlist pripada jednom korisniku.
+
+### 4. Wishlist i Proizvod
+- Veza: sadrži
+- Kardinalnost: M:N
+    
+    Wishlist može sadržavati više proizvoda.  
+    Proizvod može biti u više wishlista.
+
+### 5. Recenzija i Proizvod
+- Veza: ocjenjuje
+- Kardinalnost: N:1
+    
+    Recenzija je povezana s jednim proizvodom.  
+    Proizvod može imati više recenzija.
+
+### 6. Narudžba i Proizvod
+- Veza: sadrži
+- Kardinalnost: M:N
+- Veza ima atribute: količina, cijena.
+    
+    Narudžba može sadržavati više proizvoda.  
+    Proizvod može biti u više narudžbi.  
+
+### 7. Narudžba i Uplata
+- Veza: ima
+- Kardinalnost: 1:N
+    
+    Jedna narudžba ima jednu uplatu.  
+    Više uplata mogu biti vezane za različite narudžbe.
+
+### 8. Narudžba i Dostava
+- Veza: ima
+- Kardinalnost: 1:1
+    
+    Jedna narudžba ima jednu dostavu.  
+    Dostava pripada jednoj narudžbi.
+
+### 9. Dostava i Kurirska služba
+- Veza: dostavlja
+- Kardinalnost: N:1
+    
+    Dostavu vrši jedna kurirska služba.  
+    Kurirska služba može imati više dostava.
+
+### 10. Narudžba i Kupon
+- Veza: koristi
+- Kardinalnost: M:N
+    
+    Narudžba može koristiti više kupona.  
+    Kupon može biti korišten u više narudžbi.
+
+### 11. Proizvod i Kategorija
+- Veza: pripada
+- Kardinalnost: M:N
+    
+    Proizvod može pripadati više kategorija.  
+    Jedna kategorija može imati više proizvoda.
+
+### 12. Proizvod i Povijest cijena
+- Veza: ima
+- Kardinalnost: 1:N
+    
+    Proizvod može imati više zapisa u povijesti cijena.  
+    Jedan zapis pripada jednom proizvodu.
+
+### 13. Proizvod i Slika
+- Veza: ima
+- Kardinalnost: M:N
+    
+    Proizvod može imati više slika.  
+    Slika prikazuje više proizvoda.
+
+### 14. Proizvod i Skladište
+- Veza: nalazi se u
+- Kardinalnost: M:N
+- Atributi veze: količina.  
+    
+    Proizvod se može nalaziti u više skladišta.  
+    Skladište može sadržavati više proizvoda.
+
+### 15. Skladište i Povijest zaliha
+- Veza: prati
+- Kardinalnost: 1:N
+    
+    Skladište ima više zapisa u povijesti zaliha.  
+    Svaki zapis se odnosi na jedno skladište.
+
+### 16. Povijest zaliha i Proizvod
+- Veza: ima
+- Kardinalnost: N:1
+    
+    Više zapisa pripada jednom proizvodu.  
+    Jedan zapis se odnosi na jedan proizvod.
 
 ---
 
@@ -133,6 +251,7 @@ DOSTAVA (id (PK), status, narudzba_id (FK), cijena, opis, datum_kreiranja, datum
 
 Opis tablica korištenih u bazi podataka.
 
+### 6.1. PROIZVOD
 ### 6.1. PROIZVOD
 Tablica `PROIZVOD` sadrži osnovne informacije o proizvodima dostupnim u web trgovini.
 - **Primarni ključ:** `id` - Jedinstveni identifikator proizvoda.
@@ -323,6 +442,7 @@ Tablica `DOSTAVA` sadrži informacije o dostavama narudžbi.
 
 Ovaj vodič objašnjava kako postaviti i pokrenuti projekt baze podataka za web trgovinu. Projekt koristi MySQL i sastoji se od SQL skripti za definiranje sheme baze podataka i učitavanje podataka iz CSV datoteka ili manualno kroz INSERT-ove.
 
+---
 
 Slijedite ove korake za postavljanje projekta kroz **INSERT-ove**:
 
@@ -335,6 +455,8 @@ Slijedite ove korake za postavljanje projekta kroz **INSERT-ove**:
     *   Izvršite cijelu skriptu `shema.sql`. Ovo će stvoriti bazu podataka `web_trgovina_bp1` i sve potrebne tablice.
     *   Nakon uspješnog izvršavanja `shema.sql`, otvorite SQL skriptu `insert_data.sql`.
     *   Izvršite cijelu skriptu `insert_data.sql`. Ovo će popuniti tablice podacima s vrijednostima iz INSERT-ova.
+
+---
 
 Slijedite ove korake za postavljanje projekta kroz **CSV datoteke**:
 
@@ -384,25 +506,12 @@ Opis: *[Kratki opis što upit radi]*
 
 ## 9. ZAKLJUČAK
 
-*[Zaključi dokumentaciju s razmatranjem naučenih lekcija, izazova, prednosti baze, mogućnosti primjene itd.]*
+Projekt nam je poboljšao razumijevanje procesa izrade i implementacije baze podataka za web trgovinu. Kroz praktičan rad stekli smo uvid u sveukupni proces razvoja - od planiranja relacijskog modela do njegove implementacije u SQL-u.
 
----
+Tijekom projekta morali smo riješiti određene probleme, kao npr. neispravno modeliranje relacijskog modela i nepravilno povezivanje entiteta. S vremenom smo kroz učenje i malo *trial and error*-a uspjeli razumjeti greške te ih ispravili tijekom razvoja baze.
 
-## 10. OGRANIČENJA I MOGUĆNOSTI SUSTAVA
+Sustav nam olakšava rad s podacima, omogućuje pregled promjena kroz vrijeme i izradu analitičkih izvještaja. Ove funkcionalnosti omogućuju primjenu sustava u stvarnome svijetu, pa čak i na drugim područjima s nekoliko promjena.
 
-### Ograničenja
-
-1. **Performanse:** Sustav može imati poteškoća s performansama pri obradi velikih količina podataka ili istovremenom pristupu velikog broja korisnika.
-2. **Sigurnost:** Potrebno je dodatno osigurati podatke korisnika i transakcije kako bi se spriječile potencijalne prijetnje poput neovlaštenog pristupa ili curenja podataka.
-3. **Skalabilnost:** Sustav je dizajniran za male do srednje web trgovine i može zahtijevati značajne prilagodbe za podršku većim trgovinama.
-4. **Integracija:** Ograničena podrška za integraciju s vanjskim sustavima poput ERP-a ili CRM-a.
-
-### Mogućnosti
-
-1. **Upravljanje podacima:** Sustav omogućuje učinkovito upravljanje podacima o proizvodima, korisnicima, narudžbama, skladištima i dostavama.
-2. **Praćenje povijesti:** Povijest cijena i zaliha omogućuje analizu promjena i optimizaciju poslovanja.
-3. **Analitika:** Generiranje izvještaja o najprodavanijim proizvodima, najaktivnijim korisnicima i statistici kupona pruža korisne uvide za donošenje poslovnih odluka.
-4. **Fleksibilnost:** Sustav podržava različite načine plaćanja, dostave i promocije, prilagođavajući se potrebama korisnika.
-5. **Jednostavna integracija:** Sustav se može proširiti dodatnim funkcionalnostima poput API-ja za povezivanje s vanjskim aplikacijama.
+Zaključno, projekt nam je dao skoro *first hand experience* u radu s bazama podataka - naučili smo puno više nego samo iz knjiga, što je i očekivano jer smo morali sami ispravljati greške i rješavati probleme. Takvo iskustvo sigurno će nam biti korisno ako budemo imali slične zadatke u budućnosti.
 
 ---
