@@ -125,7 +125,7 @@ CREATE TABLE kupon_narudzba (
 
 CREATE TABLE wishlist (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    korisnik_id INT NOT NULL UNIQUE,
+    korisnik_id INT NOT NULL,
     naziv VARCHAR(255) NOT NULL,
     datum DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (korisnik_id) REFERENCES korisnik(id)
@@ -184,11 +184,11 @@ CREATE TABLE kurirska_sluzba (
     kontakt VARCHAR(255)
 );
 
+
 CREATE TABLE dostava (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    naziv VARCHAR(255) NOT NULL UNIQUE,
     status ENUM('naručeno', 'u transportu', 'isporučeno') DEFAULT 'naručeno',
-    narudzba_id INT NOT NULL,
+    narudzba_id INT NOT NULL UNIQUE, -- Svaka narudžba može imati samo jednu dostavu
     cijena INT NOT NULL, -- Cijena dostave u centima
     opis VARCHAR(500),
     datum_kreiranja DATETIME DEFAULT CURRENT_TIMESTAMP,
