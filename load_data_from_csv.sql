@@ -150,6 +150,6 @@ INTO TABLE dostava
 FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '"'
 LINES TERMINATED BY '\r\n'
 IGNORE 1 ROWS
-(id, naziv, status, narudzba_id, cijena, opis, datum_kreiranja, datum_slanja, datum_dostave, kurirska_sluzba_id);
+(id, status, narudzba_id, cijena, opis, datum_kreiranja, datum_slanja, datum_dostave, kurirska_sluzba_id);
 
 SELECT 'Data loading complete.' AS status;
