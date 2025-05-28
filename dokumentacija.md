@@ -26,7 +26,11 @@
 
 ## 1. UVOD
 
-*[Ovdje napiši kratak opis projekta, svrhu baze podataka i razloge odabira teme.]*
+Projekt *Vođenje web trgovine* osmišljen je s ciljem izrade baze podataka koja omogućuje učinkovito upravljanje online trgovinom. Baza podataka pruža podršku za ključne funkcionalnosti poput upravljanja proizvodima, narudžbama, korisnicima, skladištem, dostavom i promocijama. 
+
+Svrha baze podataka je osigurati pouzdano i brzo upravljanje podacima, omogućiti jednostavno praćenje poslovnih procesa te podržati analizu i optimizaciju poslovanja. 
+
+Razlog odabira ove teme je rastuća popularnost online trgovina i potreba za kvalitetnim sustavima koji omogućuju njihovo vođenje. Projekt pruža priliku za praktičnu primjenu znanja o dizajnu baza podataka, relacijskim modelima i SQL upitima, uz fokus na stvarne poslovne zahtjeve.
 
 ---
 
@@ -96,7 +100,7 @@ POVIJEST_ZALIHA (id (PK), skladiste_id (FK), proizvod_id (FK), kolicina datum, o
 KURIRSKA_SLUZBA (id (PK), naziv, opis, kontakt)
 ```
 ```sql
-DOSTAVA (id (PK), naziv, status, narudzba_id (FK), cijena, opis, datum_kreiranja, datum_slanja, datum_dostave, kurirska_sluzba_id (FK))
+DOSTAVA (id (PK), status, narudzba_id (FK), cijena, opis, datum_kreiranja, datum_slanja, datum_dostave, kurirska_sluzba_id (FK))
 ```
 
 ---
@@ -112,27 +116,186 @@ DOSTAVA (id (PK), naziv, status, narudzba_id (FK), cijena, opis, datum_kreiranja
 Opis tablica korištenih u bazi podataka.
 
 ### 5.1. PROIZVOD
-*[Opis tablice, primarni i strani ključevi, tipovi podataka, ograničenja itd.]*
+Tablica `PROIZVOD` sadrži osnovne informacije o proizvodima dostupnim u web trgovini.
+- **Primarni ključ:** `id` - Jedinstveni identifikator proizvoda.
+- **Atributi:**
+  - `naziv` - Naziv proizvoda, koji mora biti definiran.
+  - `opis` - Detaljan opis proizvoda, opcionalan.
+  - `cijena` - Cijena proizvoda izražena u centima, mora biti veća od 0.
+- **Ograničenja:**
+  - Provjera (`CHECK`) osigurava da cijena bude pozitivna vrijednost.
 
-### 5.2. SLIKA  
-### 5.3. SLIKA_PROIZVOD  
-### 5.4. KATEGORIJA  
-### 5.5. PROIZVOD_KATEGORIJA  
-### 5.6. KORISNIK  
-### 5.7. NARUDZBA  
-### 5.8. NARUDZBA_PROIZVOD  
-### 5.9. UPLATA  
-### 5.10. RECENZIJA  
-### 5.11. KUPON  
-### 5.12. KUPON_NARUDZBA  
-### 5.13. WISHLIST    
-### 5.14. WISHLIST_PROIZVOD    
-### 5.15. SKLADISTE  
-### 5.16. SKLADISTE_PROIZVOD  
-### 5.17. POVIJEST_CIJENA  
-### 5.18. POVIJEST_ZALIHA  
-### 5.19. KURIRSKA_SLUZBA  
-### 5.20. DOSTAVA  
+### 5.2. SLIKA
+Tablica `SLIKA` sadrži informacije o slikama proizvoda.
+- **Primarni ključ:** `id` - Jedinstveni identifikator slike.
+- **Atributi:**
+  - `putanja` - Putanja do slike na serveru, mora biti jedinstvena.
+  - `naziv` - Naziv slike, opisuje sadržaj slike.
+  - `opis` - Dodatni opis slike, opcionalan.
+
+### 5.3. SLIKA_PROIZVOD
+Tablica `SLIKA_PROIZVOD` povezuje slike s proizvodima.
+- **Primarni ključ:** `id` - Jedinstveni identifikator veze između slike i proizvoda.
+- **Strani ključevi:**
+  - `proizvod_id` - Referenca na tablicu `PROIZVOD`.
+  - `slika_id` - Referenca na tablicu `SLIKA`.
+
+### 5.4. KATEGORIJA
+Tablica `KATEGORIJA` sadrži informacije o kategorijama proizvoda.
+- **Primarni ključ:** `id` - Jedinstveni identifikator kategorije.
+- **Atributi:**
+  - `naziv` - Naziv kategorije, mora biti jedinstven.
+  - `opis` - Detaljan opis kategorije, opcionalan.
+
+### 5.5. PROIZVOD_KATEGORIJA
+Tablica `PROIZVOD_KATEGORIJA` povezuje proizvode s kategorijama.
+- **Primarni ključ:** `id` - Jedinstveni identifikator veze između proizvoda i kategorije.
+- **Strani ključevi:**
+  - `proizvod_id` - Referenca na tablicu `PROIZVOD`.
+  - `kategorija_id` - Referenca na tablicu `KATEGORIJA`.
+
+### 5.6. KORISNIK
+Tablica `KORISNIK` sadrži informacije o korisnicima web trgovine.
+- **Primarni ključ:** `id` - Jedinstveni identifikator korisnika.
+- **Atributi:**
+  - `ime` - Ime korisnika.
+  - `prezime` - Prezime korisnika.
+  - `email` - Email korisnika, mora biti jedinstven.
+  - `lozinka` - Lozinka korisnika.
+  - `adresa`, `grad`, `drzava`, `telefon` - Kontakt podaci korisnika, opcionalni.
+
+### 5.7. NARUDZBA
+Tablica `NARUDZBA` sadrži informacije o narudžbama korisnika.
+- **Primarni ključ:** `id` - Jedinstveni identifikator narudžbe.
+- **Strani ključ:**
+  - `korisnik_id` - Referenca na tablicu `KORISNIK`.
+- **Atributi:**
+  - `datum` - Datum kreiranja narudžbe.
+  - `status` - Status narudžbe (`na čekanju`, `otkazano`, `isporučeno`).
+  - `ukupni_iznos` - Ukupna cijena narudžbe izražena u centima.
+  - `nacin_placanja` - Način plaćanja (`kreditna kartica`, `pouzeće`, `bankovni transfer`).
+
+### 5.8. NARUDZBA_PROIZVOD
+Tablica `NARUDZBA_PROIZVOD` povezuje narudžbe s proizvodima.
+- **Primarni ključ:** `id` - Jedinstveni identifikator veze između narudžbe i proizvoda.
+- **Strani ključevi:**
+  - `narudzba_id` - Referenca na tablicu `NARUDZBA`.
+  - `proizvod_id` - Referenca na tablicu `PROIZVOD`.
+- **Atributi:**
+  - `kolicina` - Količina proizvoda u narudžbi.
+  - `cijena` - Cijena proizvoda izražena u centima.
+
+### 5.9. UPLATA
+Tablica `UPLATA` sadrži informacije o transakcijama vezanim uz narudžbe.
+- **Primarni ključ:** `id` - Jedinstveni identifikator uplate.
+- **Strani ključ:**
+  - `narudzba_id` - Referenca na tablicu `NARUDZBA`.
+- **Atributi:**
+  - `iznos` - Iznos transakcije izražen u centima.
+  - `datum` - Datum transakcije.
+  - `status` - Status transakcije (`uspješna`, `neuspješna`).
+
+### 5.10. RECENZIJA
+Tablica `RECENZIJA` sadrži ocjene i komentare korisnika o proizvodima.
+- **Primarni ključ:** `id` - Jedinstveni identifikator recenzije.
+- **Strani ključevi:**
+  - `proizvod_id` - Referenca na tablicu `PROIZVOD`.
+  - `korisnik_id` - Referenca na tablicu `KORISNIK`.
+- **Atributi:**
+  - `ocjena` - Ocjena proizvoda (1-5).
+  - `komentar` - Komentar korisnika.
+  - `datum` - Datum recenzije.
+
+### 5.11. KUPON
+Tablica `KUPON` sadrži informacije o kuponima za popuste.
+- **Primarni ključ:** `id` - Jedinstveni identifikator kupona.
+- **Atributi:**
+  - `naziv` - Naziv kupona, mora biti jedinstven.
+  - `tip` - Tip kupona (`fiksni`, `postotak`, `besplatna dostava`).
+  - `vrijednost` - Vrijednost kupona.
+  - `status` - Status kupona (`aktivan`, `neaktivan`).
+  - `datum_pocetka`, `datum_isteka` - Vrijeme trajanja kupona.
+- **Ograničenja:**
+  - Provjera (`CHECK`) osigurava ispravne vrijednosti za svaki tip kupona.
+
+### 5.12. KUPON_NARUDZBA
+Tablica `KUPON_NARUDZBA` povezuje kupone s narudžbama.
+- **Primarni ključ:** `id` - Jedinstveni identifikator veze između kupona i narudžbe.
+- **Strani ključevi:**
+  - `kupon_id` - Referenca na tablicu `KUPON`.
+  - `narudzba_id` - Referenca na tablicu `NARUDZBA`.
+
+### 5.13. WISHLIST
+Tablica `WISHLIST` sadrži liste želja korisnika.
+- **Primarni ključ:** `id` - Jedinstveni identifikator liste želja.
+- **Strani ključ:**
+  - `korisnik_id` - Referenca na tablicu `KORISNIK`.
+- **Atributi:**
+  - `naziv` - Naziv liste želja.
+  - `datum` - Datum kreiranja liste.
+
+### 5.14. WISHLIST_PROIZVOD
+Tablica `WISHLIST_PROIZVOD` povezuje proizvode s listama želja.
+- **Primarni ključ:** `id` - Jedinstveni identifikator veze između liste želja i proizvoda.
+- **Strani ključevi:**
+  - `wishlist_id` - Referenca na tablicu `WISHLIST`.
+  - `proizvod_id` - Referenca na tablicu `PROIZVOD`.
+
+### 5.15. SKLADISTE
+Tablica `SKLADISTE` sadrži informacije o skladištima.
+- **Primarni ključ:** `id` - Jedinstveni identifikator skladišta.
+- **Atributi:**
+  - `naziv` - Naziv skladišta, mora biti jedinstven.
+  - `adresa`, `grad`, `drzava` - Lokacija skladišta.
+
+### 5.16. SKLADISTE_PROIZVOD
+Tablica `SKLADISTE_PROIZVOD` povezuje proizvode sa skladištima.
+- **Primarni ključ:** `id` - Jedinstveni identifikator veze između skladišta i proizvoda.
+- **Strani ključevi:**
+  - `skladiste_id` - Referenca na tablicu `SKLADISTE`.
+  - `proizvod_id` - Referenca na tablicu `PROIZVOD`.
+- **Atributi:**
+  - `kolicina` - Količina proizvoda u skladištu.
+
+### 5.17. POVIJEST_CIJENA
+Tablica `POVIJEST_CIJENA` sadrži povijest promjena cijena proizvoda.
+- **Primarni ključ:** `id` - Jedinstveni identifikator promjene cijene.
+- **Strani ključ:**
+  - `proizvod_id` - Referenca na tablicu `PROIZVOD`.
+- **Atributi:**
+  - `cijena` - Nova cijena proizvoda.
+  - `datum` - Datum promjene cijene.
+
+### 5.18. POVIJEST_ZALIHA
+Tablica `POVIJEST_ZALIHA` sadrži povijest promjena zaliha proizvoda u skladištima.
+- **Primarni ključ:** `id` - Jedinstveni identifikator promjene zaliha.
+- **Strani ključevi:**
+  - `skladiste_id` - Referenca na tablicu `SKLADISTE`.
+  - `proizvod_id` - Referenca na tablicu `PROIZVOD`.
+- **Atributi:**
+  - `kolicina` - Nova količina proizvoda.
+  - `datum` - Datum promjene zaliha.
+  - `opis` - Opis promjene.
+
+### 5.19. KURIRSKA_SLUZBA
+Tablica `KURIRSKA_SLUZBA` sadrži informacije o kurirskim službama.
+- **Primarni ključ:** `id` - Jedinstveni identifikator kurirske službe.
+- **Atributi:**
+  - `naziv` - Naziv kurirske službe, mora biti jedinstven.
+  - `opis` - Detaljan opis kurirske službe.
+  - `kontakt` - Kontakt informacije.
+
+### 5.20. DOSTAVA
+Tablica `DOSTAVA` sadrži informacije o dostavama narudžbi.
+- **Primarni ključ:** `id` - Jedinstveni identifikator dostave.
+- **Strani ključevi:**
+  - `narudzba_id` - Referenca na tablicu `NARUDZBA`.
+  - `kurirska_sluzba_id` - Referenca na tablicu `KURIRSKA_SLUZBA`.
+- **Atributi:**
+  - `status` - Status dostave (`naručeno`, `u transportu`, `isporučeno`).
+  - `cijena` - Cijena dostave izražena u centima.
+  - `opis` - Dodatni opis dostave.
+  - `datum_kreiranja`, `datum_slanja`, `datum_dostave` - Vremenski podaci vezani uz dostavu.
 
 *(Za svaku tablicu kopiraj strukturu opisa kao za KLUB, prilagođeno tvojem projektu.)*
 
