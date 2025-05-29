@@ -37,10 +37,13 @@ Razlog odabira ove teme je rastuća popularnost online trgovina i potreba za kva
 
 ## 2. OPIS POSLOVNOG PROCESA
 
-
-*----- Napisati malo bolje -----*
-
 Poslovni proces kojeg smo ovdje modelirali, iako pojednostavljen i limitiran, vjerujemo da omogućuje učinkovito upravljanje ključnim entitetima i njihovim međusobnim odnosima.
+
+/*
+
+Počnimo sa tablicom proizvodi koji je početni dio svake trgovine te smo joj dali najviše pažnje. U tablici PROIZVOD sadržava naziv, opis, cijena proizvoda te id proizvoda. Svakom proizvodu je potrebno dodijeliti vise slika koje pokazujemo kupcu, te smo napravili tablicu SLIKA u kojoj je putanja, naziv i opis. Povezali smo je putem tablice SLIKA_PROIZVOD kojoj smo postavili vanjski ključ id povezanih tablica. Sljedeće je tablica POVIJEST_CIJENA u kojoj je vanjski ključ id_poroizvoda te prošla cijena i razdoblje koje ga obuhvaća. Povijest cijena je potrebna za buduće analize podataka. Za lakše pretraživanje i grupiranje proizvoda smo napravili tablicu KATEGORIJA u kojoj je naiv i opis kategorija, te tablica PROIZVOD _KATEGORIJA koja ih povezuje. Unutar tablice su vanjski ključevi Id-ovi proizvoda i kategorija kojom smo dodijelili povezanost dviju tablica.
+
+*/
 
 Proizvod je glavni entitet na kojeg smo se fokusirali i dali najviše pažnje. Tablica `PROIZVOD` sadrži osnovne informacije o artiklima dostupnim u trgovini, uključujući naziv, opis i cijenu. Za svakog proizvoda možemo dodati više slika. Svaki proizvod može također pripadati u više kategorija, koja grupiraju proizvode radi lakšeg pretraživanja. Evidentira se povijest promjena cijena proizvoda i povijest zaliha kako bismo imali podatke za naknadne analize.
 
@@ -492,13 +495,6 @@ Slijedite ove korake za postavljanje projekta kroz **CSV datoteke**:
 
 ## 8. UPITI
 
-Napiši i objasni SQL upite koje si koristio u projektu, npr.:
-#### Upit 1:  
-Opis: *[Kratki opis što upit radi]*  
-```sql
--- SQL kod upita
-```
-
 ### Erik Fakin
 
 #### Upit 1:  
@@ -565,20 +561,15 @@ SELECT
     p2.id AS proizvod_id,
     p2.naziv AS proizvod_naziv,
     COUNT(*) AS broj_zajednickih_kupovina
-FROM
-    narudzba_proizvod np1
-INNER JOIN
-    narudzba_proizvod np2 ON np1.narudzba_id = np2.narudzba_id
-INNER JOIN
-    proizvod p2 ON np2.proizvod_id = p2.id
+FROM narudzba_proizvod np1
+INNER JOIN narudzba_proizvod np2 ON np1.narudzba_id = np2.narudzba_id
+INNER JOIN proizvod p2 ON np2.proizvod_id = p2.id
 WHERE
     np1.proizvod_id = 11
     AND np2.proizvod_id <> np1.proizvod_id
     AND np2.kolicina > 0
-GROUP BY
-    p2.id
-ORDER BY
-    broj_zajednickih_kupovina DESC;
+GROUP BY p2.id
+ORDER BY broj_zajednickih_kupovina DESC;
 ```
 
 #### Upit 4:
@@ -629,7 +620,398 @@ GROUP BY mjesec, p.id
 ORDER BY mjesec ASC, ukupni_prihod DESC;
 ```
 
+### Tomas Carlin
 
+#### Upit 1:
+
+Upit koristi tablice "korisnik" i "narduzba" kojoj pridružujemo skaraćnice k i n. U tablici prikljčujemo id korisnika, potom spajamo sa CONCAT "ime" i "prezime" u stupac "ime_prezime", te stupac "mail"-a i na kraju zbroj ukupnog iznosa u stupac "ukupna_potrosnja".
+
+U nastavku povezujemmo tablice "korsnik" i "narudzba" preko JOIN operacije u kojoj svaki id korisnika je povezan sa svojim id-om iz tablica "narudzba".
+
+Nakon toga grupiramo tablicu po id korisnika kojom postižemo mogućnost zbrajanja narudžbi korisiteći SUM. Koristeći naredbu HAVING dodajemo uvjet o potrošnji većoj od 50000. Na kraju, postavljamo padajući poredak cijena od ukupne potrosnje.
+
+```sql
+SELECT 
+    k.id AS korisnik_id,
+    CONCAT(k.ime, ' ', k.prezime) AS ime_prezime,
+    k.email,
+    SUM(n.ukupni_iznos) AS ukupna_potrosnja
+FROM korisnik k
+JOIN narudzba n ON k.id = n.korisnik_id
+GROUP BY k.id
+HAVING ukupna_potrosnja > 50000
+ORDER BY ukupna_potrosnja DESC;
+```
+
+Upit koristi tablice "povijest_cijena" i "proizvod", kojima dodjeljuje skraćenice pc i p. U tablici dohvaćamo id proizvoda, naziv proizvoda, datum promjene cijene te trenutnu cijenu.
+
+Zatim, koristimo funkciju LAG kako bismo dohvatili prethodnu cijenu za isti proizvod, pazeći da se usporedba vrši po datumu (ORDER BY datum) unutar svakog proizvoda (PARTITION BY proizvod_id).
+
+U nastavku računamo postotnu promjenu cijene tako da od trenutne cijene oduzmemo prethodnu, podijelimo s prethodnom i pomnožimo s 100, te zaokružimo rezultat na dvije decimale.
+
+Na kraju koristimo JOIN da spojimo podatke iz tablice "proizvod" radi naziva proizvoda, te sortiramo rezultat po id-u proizvoda i datumu promjene kako bismo dobili bolji pregled promjena po vremenskom slijedu.
+
+#### Upit 2:
+
+```sql
+SELECT 
+    pc.proizvod_id,
+    p.naziv AS proizvod_naziv,
+    pc.datum,
+    pc.cijena AS cijena_u_centima,
+    LAG(pc.cijena) OVER (PARTITION BY pc.proizvod_id ORDER BY pc.datum) AS prethodna_cijena,
+    ROUND(
+        ((pc.cijena - LAG(pc.cijena) OVER (PARTITION BY pc.proizvod_id ORDER BY pc.datum)) / 
+        LAG(pc.cijena) OVER (PARTITION BY pc.proizvod_id ORDER BY pc.datum)) * 100, 2) 
+        AS postotna_promjena
+FROM povijest_cijena pc
+JOIN proizvod p ON pc.proizvod_id = p.id
+ORDER BY pc.proizvod_id, pc.datum;
+```
+
+#### Upit 3:
+
+Upit koristi tablice "skladiste_proizvod", "proizvod" i "skladiste", kojima dodjeljujemo skraćenice sp, p i s. U SELECT dijelu prikazujemo id i naziv proizvoda, id i naziv skladišta, te količinu tog proizvoda u skladištu.
+
+Tablice spajamo pomoću JOIN-a, gdje sp.proizvod_id povezujemo s p.id, a sp.skladiste_id sa s.id, kako bismo mogli prikazati nazive proizvoda i skladišta umjesto samo id-eva.
+
+Glavna logika nalazi se u WHERE dijelu, gdje tražimo samo one retke u kojima kombinacija (proizvod_id, kolicina) odgovara najvećoj količini za svaki proizvod. To radimo pomoću IN i podupita koji koristi MAX(kolicina) i GROUP BY za grupiranje po proizvodu.
+
+Konačan rezultat prikazuje sva skladišta koja imaju najveću zalihu za svaki proizvod.
+
+```sql
+SELECT 
+    sp.proizvod_id,
+    p.naziv AS proizvod_naziv,
+    sp.skladiste_id,
+    s.naziv AS skladiste_naziv,
+    sp.kolicina
+FROM skladiste_proizvod sp
+JOIN proizvod p ON sp.proizvod_id = p.id
+JOIN skladiste s ON sp.skladiste_id = s.id
+WHERE (sp.proizvod_id, sp.kolicina) IN (
+    SELECT proizvod_id, MAX(kolicina)
+    FROM skladiste_proizvod
+    GROUP BY proizvod_id
+);
+```
+
+#### Upit 4:
+
+Upit koristi tablice "narudzba", "kupon_narudzba", "kupon" i "dostava", kojima se dodjeljuju skraćenice n, kn, k i d.
+
+Prikazujemo id narudžbe i datum narudžbe, ukupni iznos proizvoda, vrijednost kupona (ili 0 ako nije primijenjen), cijenu dostave i na kraju računamo ukupan trošak narudžbe.
+
+Spajamo tablice pomoću LEFT JOIN, kako bi sve narudžbe bile prikazane, čak i ako nema kupona ili dostave.
+
+Izračun ukupnog troška se radi tako da se od cijene proizvoda oduzme vrijednost kupona i doda cijena dostave. Ako nema kupona, koristi se nula.
+
+```sql
+SELECT 
+    n.id AS narudzba_id,
+    n.datum AS datum_narudzbe,
+    n.ukupni_iznos AS ukupni_iznos_proizvoda,
+    IFNULL(k.vrijednost, 0) AS vrijednost_kupona,
+    d.cijena AS cijena_dostave,
+    (n.ukupni_iznos - IFNULL(k.vrijednost, 0) + d.cijena) AS ukupni_trosak
+FROM narudzba n
+LEFT JOIN kupon_narudzba kn ON n.id = kn.narudzba_id
+LEFT JOIN kupon k ON kn.kupon_id = k.id
+LEFT JOIN dostava d ON n.id = d.narudzba_id;
+```
+
+### Evan Dagostini
+
+#### Upit 1:
+
+Pogled nazvan "top_kupci_30_dana" kombinira podatke iz tablica "korisnik" i "narudzba" kako bi prikazao deset korisnika koji su u zadnjih 30 dana ostvarili najveću ukupnu potrošnju.
+
+SELECT naredba dohvaća korisnikove osnovne podatke ("id", "ime", "prezime", "email") te koristi COUNT za broj narudžbi i SUM za izračun ukupne potrošnje ("ukupni_iznos") unutar tog perioda.
+
+INNER JOIN spaja tablice "korisnik" i "narudzba" prema "korisnik_id", dok WHERE uvjet filtrira samo narudžbe koje su napravljene unutar posljednjih 30 dana pomoću funkcije DATE_SUB. Rezultat se grupira po korisniku, sortira po ukupnoj potrošnji i ograničava na prvih deset korisnika.
+
+```sql
+CREATE OR REPLACE VIEW top_kupci_30_dana AS
+SELECT 
+    k.id AS korisnik_id,
+    k.ime,
+    k.prezime,
+    k.email,
+    COUNT(n.id) AS broj_narudzbi,
+    SUM(n.ukupni_iznos) AS ukupna_potrosnja
+FROM korisnik k
+JOIN narudzba n ON k.id = n.korisnik_id
+WHERE n.datum >= DATE_SUB('2025-05-26 00:00:00', INTERVAL 30 DAY)
+GROUP BY k.id, k.ime, k.prezime, k.email
+ORDER BY ukupna_potrosnja DESC
+LIMIT 10;
+```
+
+#### Upit 2:
+
+Pogled "proizvodi_bez_narudzbi_60_dana" koristi LEFT JOIN između tablica "proizvod", "narudzba_proizvod" i "narudzba" kako bi prikazao sve proizvode koji u zadnjih 60 dana nisu imali nijednu narudžbu.
+
+Upit dohvaća osnovne podatke o proizvodu i koristi LEFT JOIN kako bi uključio sve proizvode, čak i one koji nemaju pripadajuće narudžbe. Koristi se COALESCE(SUM(...), 0) kako bi se broj prodanih jedinica prikazao kao 0 za takve slučajeve.
+
+WHERE dio filtrira samo narudžbe u zadnjih 60 dana, a HAVING uvjet osigurava da se prikazuju samo proizvodi s 0 prodanih jedinica. Rezultat se grupira po proizvodu.
+
+```sql
+CREATE OR REPLACE VIEW proizvodi_bez_narudzbi_60_dana AS
+SELECT 
+    p.id,
+    p.naziv,
+    p.cijena,
+    COALESCE(SUM(np.kolicina), 0) AS kolicina_prodanih
+FROM proizvod p
+LEFT JOIN narudzba_proizvod np ON p.id = np.proizvod_id
+LEFT JOIN narudzba n ON np.narudzba_id = n.id AND n.datum >= DATE_SUB('2025-05-26 00:00:00', INTERVAL 60 DAY)
+GROUP BY p.id, p.naziv, p.cijena
+HAVING COALESCE(SUM(np.kolicina), 0) = 0;
+```
+
+#### Upit 3:
+
+Pogled "kupon_statistika" prikazuje osnovne informacije o aktivnim kuponima iz tablice "kupon", te broj narudžbi u kojima je svaki kupon iskorišten, koristeći tablicu "kupon_narudzba".
+
+U SELECT dijelu dohvaćaju se atributi poput naziva, tipa i vrijednosti kupona, dok se COUNT koristi za brojanje koliko puta je kupon iskorišten. MIN i MAX prikazuju raspon trajanja kupona (početak i kraj).
+
+Koristi se LEFT JOIN između "kupon" i "kupon_narudzba" kako bi se prikazali i kuponi koji još nisu iskorišteni. WHERE ograničava rezultat samo na aktivne kupone. Rezultat se grupira po kuponu.
+
+```sql
+CREATE OR REPLACE VIEW kupon_statistika AS
+SELECT
+    k.id AS kupon_id,
+    k.naziv,
+    k.tip,
+    k.vrijednost,
+    COUNT(kn.narudzba_id) AS broj_koristenja,
+    MIN(k.datum_pocetka) AS od_kada,
+    MAX(k.datum_isteka) AS do_kada
+FROM kupon k
+LEFT JOIN kupon_narudzba kn ON k.id = kn.kupon_id
+WHERE k.status = 'aktivan'
+GROUP BY k.id, k.naziv, k.tip, k.vrijednost;
+```
+
+Pogled "povijest_zaliha_proizvoda" kombinira podatke iz tablica "povijest_zaliha", "proizvod" i "skladiste" kako bi prikazao sve zabilježene promjene zaliha za jedan određeni proizvod, uključujući količinu, skladište, opis promjene i vrijeme.
+
+SELECT dohvaća naziv proizvoda, naziv skladišta, količinu i opis promjene, a rezultat se sortira po vremenu u silaznom redoslijedu.
+
+Koristi se JOIN kako bi se povezale sve tri tablice na temelju stranih ključeva. WHERE ograničava prikaz na konkretan proizvod (npr. proizvod_id = 5), a ORDER BY prikazuje najnovije promjene na vrhu.
+
+#### Upit 4:
+
+```sql
+CREATE OR REPLACE VIEW povijest_zaliha_proizvoda AS
+SELECT
+    pz.proizvod_id,
+    p.naziv AS proizvod_naziv,
+    s.naziv AS skladiste_naziv,
+    pz.kolicina,
+    pz.opis,
+    pz.datum
+FROM povijest_zaliha pz
+JOIN proizvod p ON p.id = pz.proizvod_id
+JOIN skladiste s ON s.id = pz.skladiste_id
+WHERE pz.proizvod_id = 5 -- zamijeniti po potrebi
+ORDER BY pz.datum DESC;
+```
+
+### Evan Anić Parencan
+
+#### Upit 1:
+
+Upit "Korisnika koji su naručili više puta isti proizvod i koliko puta".
+
+"ponovljene_kupnje_istog_proizvoda" dohvaća podatke iz tablica: "korisnik", "narudzba", "narudzba_proizvod" i "proizvod" kako bi prikazali korisnike koji su više puta kupili isti proizvod.
+
+Korištenjem naredbe "SELECT" dohvaćamo korisničke i proizvodne podatke, dok sa naredbom "COUNT(*)" brojimo koliko je puta određeni korisnik kupio isti proizvod.
+
+Tablice se spajaju pomoću "JOIN" naredbi, gdje tablica "narudzba" povezuje korisnike s narudžbama, a tablica "narudzba_proizvod" s proizvodima. Koristimo "GROUP BY" za grupiranje po korisniku i proizvodu, a "HAVING" filtrira rezultate kako bi prikazali samo one korisnike koji su isti proizvod kupili više od jednog puta. Rezultat se na kraju sortira po broju kupnji i po imenu korisnika.
+
+```sql
+SELECT 
+    k.id AS korisnik_id,
+    CONCAT(k.ime, ' ', k.prezime) AS ime_prezime,
+    p.id AS proizvod_id,
+    p.naziv AS naziv_proizvoda,
+    COUNT(*) AS broj_ponovljenih_kupnji
+FROM narudzba n
+JOIN narudzba_proizvod np ON n.id = np.narudzba_id
+JOIN korisnik k ON n.korisnik_id = k.id
+JOIN proizvod p ON np.proizvod_id = p.id
+GROUP BY k.id, p.id
+HAVING broj_ponovljenih_kupnji > 1
+ORDER BY broj_ponovljenih_kupnji DESC, ime_prezime;
+```
+
+#### Upit 2:
+
+Upit "Pregleda proizvoda s ukupnom zaradom i brojem skladišta u kojima se nalaze".
+
+"zarada_i_skladista_po_proizvodu" spaja podatke iz tablica "proizvod", "narudzba_proizvod" i "skladiste_proizvod" s krajnjim rezultatom prikazivanja ukupne zarade po proizvodu i po broja skladišta u kojima se proizvod nalazi.
+
+"SELECT-om" dohvaćamo osnovne informacije o proizvodu, dok "SUM (np.kolicina * np.cijena)" računa ukupnu zaradu, a  "COUNT (DISCTINCT sp.skladiste_id)" broj skladišta.
+
+Koristimo "LEFT JOIN" kako bi prikazali i time uračunali, one proizvode koji se možda ne nalaze u skladištima ili nisu još naručeni. Grupiramo podatke po ID-u proizvoda, a sortiramo po ukupnoj zaradi kako bi lakše vidjeli koji proizvodi dovode najveću zaradu.
+
+```sql
+SELECT 
+    p.id AS proizvod_id,
+    p.naziv AS naziv_proizvoda,
+    p.cijena,
+    SUM(np.kolicina * np.cijena) AS ukupna_zarada,
+    COUNT(DISTINCT sp.skladiste_id) AS broj_skladista
+FROM proizvod p
+LEFT JOIN narudzba_proizvod np ON p.id = np.proizvod_id
+LEFT JOIN skladiste_proizvod sp ON p.id = sp.proizvod_id
+GROUP BY p.id, p.naziv, p.cijena
+ORDER BY ukupna_zarada DESC;
+```
+
+#### Upit 3:
+
+Upit "Pregleda proizvoda s ukupnom zaradom i brojem skladišta u kojima se nalaze".
+
+"zarada_i_skladista_po_proizvodu" spaja podatke iz tablica "proizvod", "narudzba_proizvod" i "skladiste_proizvod" s krajnjim rezultatom prikazivanja ukupne zarade po proizvodu i po broja skladišta u kojima se proizvod nalazi.
+
+"SELECT-om" dohvaćamo osnovne informacije o proizvodu, dok "SUM (np.kolicina * np.cijena)" računa ukupnu zaradu, a  "COUNT (DISCTINCT sp.skladiste_id)" broj skladišta.
+
+Koristimo "LEFT JOIN" kako bi prikazali i time uračunali, one proizvode koji se možda ne nalaze u skladištima ili nisu još naručeni. Grupiramo podatke po ID-u proizvoda, a sortiramo po ukupnoj zaradi kako bi lakše vidjeli koji proizvodi dovode najveću zaradu.
+
+```sql
+SELECT 
+    k.id AS korisnik_id,
+    CONCAT(k.ime, ' ', k.prezime) AS ime_prezime,
+    COUNT(DISTINCT kn.kupon_id) AS broj_razlicitih_kupona,
+    GROUP_CONCAT(DISTINCT ku.naziv ORDER BY ku.naziv SEPARATOR ', ') AS kuponi
+FROM korisnik k
+JOIN narudzba n ON k.id = n.korisnik_id
+JOIN kupon_narudzba kn ON n.id = kn.narudzba_id
+JOIN kupon ku ON kn.kupon_id = ku.id
+GROUP BY k.id
+HAVING broj_razlicitih_kupona > 1
+ORDER BY broj_razlicitih_kupona DESC;
+```
+
+#### Upit 4:
+
+Upit "Prosječni broj proizvoda po narudžbi po korisniku i njihova ukupna količina".
+
+"prosjecno_proizvoda_po_narudzbi" prikazuje prosječnu količinu proizvoda pri korisničkovoj narudžbi, te i njihovu ukupnu količinu i broj narudžbi.
+
+Koristimo "SUM (np.kolicina)" za ukupnu količinu proizvoda i COUNT (DISTINCT n.id) za broj narudžbi. Rezultat prosjeka dobijemo tako da podijelimo ukupnu količinu s brojem narudžbi.
+
+Tablice "korisnik", "narudzba" i "narudzba_proizvod" povezuju se pomoću "JOIN" naredbi. Grupiramo po korisniku, a "HAVING" osigurava da prikažemo samo korisnike s više narudžbi. Sortiranje se radi prema prosječnoj količini proizvoda po narudžbi.
+
+```sql
+SELECT 
+    k.id AS korisnik_id,
+    CONCAT(k.ime, ' ', k.prezime) AS ime_prezime,
+    COUNT(DISTINCT n.id) AS broj_narudzbi,
+    SUM(np.kolicina) AS ukupna_kolicina_proizvoda,
+    SUM(np.kolicina) / COUNT(DISTINCT n.id) AS prosjecno_proizvoda_po_narudzbi
+FROM korisnik k
+JOIN narudzba n ON k.id = n.korisnik_id
+JOIN narudzba_proizvod np ON n.id = np.narudzba_id
+GROUP BY k.id
+HAVING broj_narudzbi > 1
+ORDER BY prosjecno_proizvoda_po_narudzbi DESC;
+```
+
+### Denis Beletić
+
+#### Upit 1:
+
+Upit "najbolje_ocijenjeni_proizvodi" dohvaća podatke iz tablica "proizvod", "recenzija" i "korisnik" kako bi prikazali proizvode s najvišim prosječnim ocjenama, skupa s brojem recenzija i podacima o korisnicima koji su ih ostavili.
+
+Koristimo SELECT naredbu za dohvaćanje podataka, odnosno stupce "id", "naziv" i "cijena" iz tablice "proizvod". Izračunavamo prosječnu ocjenu proizvoda koristeći AVG funkciju i broj recenzija koristeći funkciju COUNT.
+
+Kako bi dohvatili sve proizvode, uključujući i one koji nemaju niti jednu recenziju, koristimo LEFT JOIN za spajanje tablica "proizvod", "recenzija" i "korisnik. Filtriramo proizvode čija je prosječna ocjena veća od 4 pomoću HAVING uvjeta, a rezultat grupiramo po stupcu "id" i sortiramo prema prosječnoj ocjeni u padajućem redoslijedu.
+
+```sql
+SELECT 
+    p.id AS proizvod_id,
+    p.naziv AS proizvod_naziv,
+    p.cijena AS proizvod_cijena,
+    AVG(r.ocjena) AS prosjecna_ocjena,
+    COUNT(r.id) AS broj_recenzija,
+    GROUP_CONCAT(DISTINCT CONCAT(k.ime, ' ', k.prezime) SEPARATOR ', ') AS korisnici
+FROM proizvod AS p
+LEFT JOIN recenzija AS r ON p.id = r.proizvod_id
+LEFT JOIN korisnik AS k ON r.korisnik_id = k.id
+GROUP BY p.id
+HAVING AVG(r.ocjena) > 4
+ORDER BY prosjecna_ocjena DESC;
+```
+
+#### Upit 2:
+
+Upit "analiza_najcesce_koristenih_kupona" dohvaća podatke iz tablica "kupon", "kupon_narudzba" i "narudzba", tako da bi mogli prikazati analizu kupona koji su najčešće korišteni. Prikazuju se podaci o broju korištenja, ukupnoj vrijednosti popusta i prosječnoj vrijednosti popusta po narudžbi.
+
+Pomoću SELECT-a dohvaćamo stupce "id" i "naziv" iz tablice "kupon". COUNT nam omogućuje računanje ukupnog broja korištenja kupona, SUM omogućuje računanje ukupnu vrijednost popusta a AVG omogućuje računanje prosječne vrijednosti popusta.
+
+INNER JOIN-om spajamo tablica "kupon", "kupon_narudzba" i "narudzba", što nam omogućuje dohvaćivanje svih korištenih kupona u narudžbama. Rezultat grupiramo po stupcu "id" kako bismo dobili agregirane podatke za svaki kupon. Rezultat filtriramo s HAVING uvjetom zato da bi smo prikazali samo kupone koji su korišteni više od 3 puta. Na kraju, sortiramo prema broju korištenja u padajućem redoslijedu.
+
+```sql
+SELECT 
+    k.id AS kupon_id,
+    k.naziv AS naziv_kupona,
+    COUNT(kn.narudzba_id) AS broj_koristenja,
+    SUM(k.vrijednost) AS ukupna_vrijednost_popusta,
+    AVG(k.vrijednost) AS prosjecna_vrijednost_popusta
+FROM kupon AS k
+INNER JOIN kupon_narudzba AS kn ON k.id = kn.kupon_id
+INNER JOIN narudzba AS n ON kn.narudzba_id = n.id
+GROUP BY k.id
+HAVING broj_koristenja > 3
+ORDER BY broj_koristenja DESC;
+```
+
+#### Upit 3:
+
+Upit "analiza_kupaca_po_potrosnji" kombinira podatke iz tablica "korisnik" i "narudzba", na način da napravimo analizu kupaca prema njihovoj ukupnoj potrošnji, broj narudžbi i prosječnu vrijednost narudžbe.
+
+SELECT-om dohvaćamo stupce "id", "ime" i "prezime" iz tablice "korisnik". Ukupnu potrošnju računamo pomoću SUM, broj narudžbi pomoću COUNT i prosječnu vrijednost pomoću AVG.
+
+Koristimo LEFT JOIN za spajanje tablica "korisnik" i "narudzba". Ovako možemo dohvatiti sve korisnike, čak i one bez ikakvih narudžbi. Rezultat grupiramo po stupcu "id" i sortiramo prema ukupnoj potrošnji u padajućem redoslijedu.
+
+```sql
+SELECT 
+    k.id AS korisnik_id,
+    CONCAT(k.ime, ' ', k.prezime) AS ime_prezime,
+    COUNT(n.id) AS broj_narudzbi,
+    SUM(n.ukupni_iznos) AS ukupna_potrosnja,
+    AVG(n.ukupni_iznos) AS prosjecna_vrijednost_narudzbe
+FROM korisnik AS k
+LEFT JOIN narudzba AS n ON k.id = n.korisnik_id
+GROUP BY k.id
+ORDER BY ukupna_potrosnja DESC;
+```
+
+#### Upit 4:
+
+Upit "promjene_zaliha_po_skladistima" kombinira podatke iz tablica "povijest_zaliha", "proizvod" i "skladiste" kako bi mogli analizirati promjene zaliha po skladištima za određeni proizvod.
+
+SELECT naredbom odabiremo stupce "id" i "naziv" iz tablica "proizvod" i "skladiste", te prikazujemo količinu, opis i datum promjene zaliha.
+
+INNER JOIN koristimo kako bi spojili tablice "povijest_zaliha", "proizvod" i "skladiste" na temelju odgovarajućih ključeva. WHERE uvjet filtrira podatke za određeni proizvod prema njegovom "id"-u. Rezultat se sortira prema datumu promjene u padajućem redoslijedu.
+
+```sql
+SELECT 
+    pz.skladiste_id,
+    s.naziv AS skladiste_naziv,
+    pz.proizvod_id,
+    p.naziv AS proizvod_naziv,
+    pz.kolicina,
+    pz.opis,
+    pz.datum
+FROM povijest_zaliha AS pz
+INNER JOIN proizvod p ON pz.proizvod_id = p.id
+INNER JOIN skladiste s ON pz.skladiste_id = s.id
+WHERE pz.proizvod_id = 11 -- zamijeniti po potrebi
+ORDER BY pz.datum DESC;
+```
 
 ---
 
