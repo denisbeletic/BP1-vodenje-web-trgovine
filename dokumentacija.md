@@ -267,7 +267,6 @@ DOSTAVA (id (PK), status, narudzba_id (FK), cijena, opis, datum_kreiranja, datum
 Opis tablica korištenih u bazi podataka.
 
 ### 6.1. PROIZVOD
-### 6.1. PROIZVOD
 Tablica `PROIZVOD` sadrži osnovne informacije o proizvodima dostupnim u web trgovini.
 - **Primarni ključ:** `id` - Jedinstveni identifikator proizvoda.
 - **Atributi:**
