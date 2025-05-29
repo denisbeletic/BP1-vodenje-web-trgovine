@@ -36,7 +36,7 @@ WHERE p.id = 11
 GROUP BY p.id;
 
 -- Sve proizvode koji se najčešće prodaju zajedno s definiranim proizvodom
-CREATE OR REPLACE VIEW najcesce_zajedno_proizvodi AS
+CREATE OR REPLACE VIEW najcesce_kupljeno_zajedno AS
 SELECT
     p2.id AS proizvod_id,
     p2.naziv AS proizvod_naziv,
@@ -52,7 +52,7 @@ WHERE
     AND np2.proizvod_id <> np1.proizvod_id
     AND np2.kolicina > 0
 GROUP BY
-    p2.id, p2.naziv
+    p2.id
 ORDER BY
     broj_zajednickih_kupovina DESC;
 
@@ -72,9 +72,10 @@ LEFT JOIN recenzija r ON p.id = r.proizvod_id
 LEFT JOIN slika_proizvod spv ON p.id = spv.proizvod_id
 LEFT JOIN slika s ON spv.slika_id = s.id
 LEFT JOIN skladiste_proizvod sp ON p.id = sp.proizvod_id
-WHERE k.naziv = 'Odabrana kategorija' AND p.cijena BETWEEN 100 AND 500
-GROUP BY p.id, p.naziv, p.cijena
+WHERE k.id = 1 AND p.cijena BETWEEN 100 AND 500
+GROUP BY p.id
 ORDER BY p.cijena ASC, prosjecna_ocjena DESC;
+
 
 -- Analiza prodaje po mjesecima
 CREATE OR REPLACE VIEW analiza_prodaje_po_mjesecima AS
@@ -82,7 +83,7 @@ SELECT
     MONTH(n.datum) AS mjesec,
     p.naziv AS proizvod_naziv,
     SUM(np.kolicina) AS ukupna_kolicina,
-    SUM(np.kolicina * p.cijena) AS ukupni_prihod
+    SUM(np.kolicina * np.cijena) AS ukupni_prihod
 FROM proizvod p
 INNER JOIN narudzba_proizvod np ON p.id = np.proizvod_id
 INNER JOIN narudzba n ON np.narudzba_id = n.id

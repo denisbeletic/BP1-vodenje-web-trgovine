@@ -493,14 +493,143 @@ Slijedite ove korake za postavljanje projekta kroz **CSV datoteke**:
 ## 8. UPITI
 
 Napiši i objasni SQL upite koje si koristio u projektu, npr.:
-
-### Upit 1:  
+#### Upit 1:  
 Opis: *[Kratki opis što upit radi]*  
 ```sql
 -- SQL kod upita
 ```
 
-*(Dodaj više upita s opisima i SQL kodom prema potrebi.)*
+### Erik Fakin
+
+#### Upit 1:  
+Pogled nazvan "top10_najprodavanijih_proizvoda" kombinira podatke iz tablica "proizvod", "narudzba_proizvod" i "narudzba" kako bi prikazao deset najprodavanijih proizvoda u zadnjih 30 dana od određenog datuma.
+
+Unutar pogleda koristi se SELECT naredba za dohvaćanje podataka. SELECT upit odabire stupce "id", "naziv" i "cijena" iz tablice "proizvod", te izračunava ukupnu količinu prodanih jedinica proizvoda koristeći funkciju SUM nad stupcem "kolicina" iz tablice "narudzba_proizvod".
+
+Zatim se koristi INNER JOIN za spajanje tablica "proizvod", "narudzba_proizvod" i "narudzba" koristeći odgovarajuće ključeve. WHERE uvjet filtrira narudžbe koje su napravljene u zadnjih 30 dana od određenog datuma koristeći funkciju DATE_SUB. Rezultat se grupira po stupcima "id", "naziv" i "cijena", te se sortira prema ukupnoj količini prodanih jedinica u opadajućem redoslijedu. Konačno, LIMIT ograničava rezultat na prvih deset proizvoda. 
+```sql
+CREATE OR REPLACE VIEW top10_najprodavanijih_proizvoda AS
+SELECT 
+    p.id, 
+    p.naziv, 
+    p.cijena, 
+    SUM(np.kolicina) AS ukupna_kolicina
+FROM proizvod
+INNER JOIN narudzba_proizvod np ON p.id = np.proizvod_id
+INNER JOIN narudzba n ON np.narudzba_id = n.id
+WHERE n.datum >= DATE_SUB('2025-05-26 00:00:00', INTERVAL 30 DAY)
+GROUP BY p.id, p.naziv, p.cijena
+ORDER BY ukupna_kolicina DESC
+LIMIT 10;
+```
+
+#### Upit 2:
+Pogled "info_proizvod" kombinira podatke iz više tablica kako bi prikazao sve informacije o jednom proizvodu, uključujući detalje, slike, kategorije, recenzije i količinu na skladištu.
+
+Unutar pogleda koristi se SELECT naredba za dohvaćanje podataka. SELECT upit odabire stupce "id", "naziv", "opis" i "cijena" iz tablice "proizvod". Koristi se funkcija GROUP_CONCAT za dohvaćanje svih kategorija i slika povezanih s proizvodom i kombiniranje u jedan string, te CONCAT za formatiranje recenzija koje uključuju ocjenu, komentar, datum i ime korisnika. SUM funkcija se koristi za izračun ukupne količine proizvoda na skladištu.
+
+LEFT JOIN se koristi za spajanje tablica "proizvod", "proizvod_kategorija", "kategorija", "slika_proizvod", "slika", "skladiste_proizvod", "recenzija" i "korisnik". WHERE uvjet filtrira podatke za određeni proizvod prema njegovom "id". Rezultat se grupira po stupcu "id".
+
+```sql
+CREATE OR REPLACE VIEW info_proizvod AS
+SELECT
+    p.id,
+    p.naziv,
+    p.opis,
+    p.cijena,
+    GROUP_CONCAT(DISTINCT k.naziv) AS kategorije,
+    GROUP_CONCAT(DISTINCT s.putanja) AS slike,
+    SUM(DISTINCT sp.kolicina) AS ukupna_kolicina_na_skladistu,
+    GROUP_CONCAT(DISTINCT CONCAT(r.ocjena, '::', r.komentar, '::', r.datum, '::', ko.ime, ' ', ko.prezime) SEPARATOR ' || ') AS recenzije
+FROM proizvod p
+LEFT JOIN proizvod_kategorija pk ON p.id = pk.proizvod_id
+LEFT JOIN kategorija k ON pk.kategorija_id = k.id
+LEFT JOIN slika_proizvod spv ON p.id = spv.proizvod_id
+LEFT JOIN slika s ON spv.slika_id = s.id
+LEFT JOIN skladiste_proizvod sp ON p.id = sp.proizvod_id
+LEFT JOIN recenzija r ON p.id = r.proizvod_id
+LEFT JOIN korisnik ko ON r.korisnik_id = ku.id
+WHERE p.id = 11 
+GROUP BY p.id;
+```
+#### Upit 3:
+Pogled "najcesce_kupljeno_zajedno" kombinira podatke iz tablica "narudzba_proizvod" i "proizvod" kako bi prikazao proizvode koji se najčešće prodaju zajedno s definiranim proizvodom.
+
+Unutar pogleda koristi se SELECT naredba za dohvaćanje podataka. SELECT upit odabire stupce "id" i "naziv" iz tablice "proizvod", te izračunava broj zajedničkih kupovina koristeći funkciju COUNT.
+
+INNER JOIN se koristi za spajanje tablica "narudzba_proizvod" i "proizvod" na temelju zajedničkih narudžbi. WHERE uvjet filtrira podatke za definirani proizvod prema njegovom "id" i isključuje sam proizvod iz rezultata. Rezultat se grupira po stupcu "id", te se sortira prema broju zajedničkih kupovina u opadajućem redoslijedu.
+
+```sql
+CREATE OR REPLACE VIEW najcesce_kupljeno_zajedno AS
+SELECT
+    p2.id AS proizvod_id,
+    p2.naziv AS proizvod_naziv,
+    COUNT(*) AS broj_zajednickih_kupovina
+FROM
+    narudzba_proizvod np1
+INNER JOIN
+    narudzba_proizvod np2 ON np1.narudzba_id = np2.narudzba_id
+INNER JOIN
+    proizvod p2 ON np2.proizvod_id = p2.id
+WHERE
+    np1.proizvod_id = 11
+    AND np2.proizvod_id <> np1.proizvod_id
+    AND np2.kolicina > 0
+GROUP BY
+    p2.id
+ORDER BY
+    broj_zajednickih_kupovina DESC;
+```
+
+#### Upit 4:
+Pogled "proizvodi_po_kategoriji_i_cijeni" kombinira podatke iz tablica "proizvod", "proizvod_kategorija", "kategorija", "recenzija", "slika_proizvod", "slika" i "skladiste_proizvod" kako bi prikazao proizvode iz odabrane kategorije unutar definiranog raspona cijena.
+
+Unutar pogleda koristi se SELECT naredba za dohvaćanje podataka. SELECT upit odabire stupce "naziv", "cijena" i "slike" iz tablice "proizvod", te izračunava prosječnu ocjenu proizvoda koristeći funkciju AVG i stanje na zalihi koristeći funkciju SUM.
+
+LEFT JOIN se koristi za spajanje tablica na temelju odgovarajućih ključeva. WHERE uvjet filtrira proizvode prema id kategorije i rasponu cijena. Rezultat se grupira po stupcu "id", te se sortira prema cijeni u rastućem redoslijedu i prosječnoj ocjeni u opadajućem redoslijedu.
+
+```sql
+CREATE OR REPLACE VIEW proizvodi_po_kategoriji_i_cijeni AS
+SELECT 
+    p.naziv AS proizvod_naziv,
+    GROUP_CONCAT(DISTINCT s.putanja) AS slike,
+    p.cijena AS proizvod_cijena,
+    AVG(r.ocjena) AS prosjecna_ocjena,
+    SUM(sp.kolicina) AS stanje_na_zalihi
+FROM proizvod p
+LEFT JOIN proizvod_kategorija pk ON p.id = pk.proizvod_id
+LEFT JOIN kategorija k ON pk.kategorija_id = k.id
+LEFT JOIN recenzija r ON p.id = r.proizvod_id
+LEFT JOIN slika_proizvod spv ON p.id = spv.proizvod_id
+LEFT JOIN slika s ON spv.slika_id = s.id
+LEFT JOIN skladiste_proizvod sp ON p.id = sp.proizvod_id
+WHERE k.id = 1 AND p.cijena BETWEEN 100 AND 500
+GROUP BY p.id
+ORDER BY p.cijena ASC, prosjecna_ocjena DESC;
+```
+
+#### Upit 5:
+Pogled "analiza_prodaje_po_mjesecima" kombinira podatke iz tablica "proizvod", "narudzba_proizvod" i "narudzba" kako bi prikazao analizu prodaje po mjesecima.
+
+Unutar pogleda koristi se SELECT naredba za dohvaćanje podataka. SELECT upit odabire stupce "mjesec" koristeći funkciju MONTH i "naziv" iz tablice "proizvod", te izračunava ukupnu količinu prodanih jedinica i ukupni prihod koristeći funkcije SUM.
+
+INNER JOIN se koristi za spajanje tablica na temelju odgovarajućih ključeva. Rezultat se grupira po stupcima "mjesec" i "id", te se sortira prema mjesecu u rastućem redoslijedu i ukupnom prihodu u opadajućem redoslijedu.
+
+```sql
+CREATE OR REPLACE VIEW analiza_prodaje_po_mjesecima AS
+SELECT 
+    MONTH(n.datum) AS mjesec,
+    p.naziv AS proizvod_naziv,
+    SUM(np.kolicina) AS ukupna_kolicina,
+    SUM(np.kolicina * np.cijena) AS ukupni_prihod
+FROM proizvod p
+INNER JOIN narudzba_proizvod np ON p.id = np.proizvod_id
+INNER JOIN narudzba n ON np.narudzba_id = n.id
+GROUP BY mjesec, p.id
+ORDER BY mjesec ASC, ukupni_prihod DESC;
+```
+
+
 
 ---
 
