@@ -1,4 +1,4 @@
--- 1. Identify customers who have placed orders with a total value exceeding 50,000 and list their details.
+-- 1. Kupce koji su narucili robu ukupne vrijednosti vece od 50.000 i njihove podatke
 SELECT 
     k.id AS korisnik_id,
     CONCAT(k.ime, ' ', k.prezime) AS ime_prezime,
@@ -15,7 +15,8 @@ HAVING
 ORDER BY 
     ukupna_potrosnja DESC;
 
--- 2. Retrieve the price history of a product and calculate the percentage change between consecutive prices.
+-- 2. Povijest cijena proizvoda i izracun postotnu promjenu izmedu uzastopnih cijena
+
 SELECT 
     pc.proizvod_id,
     p.naziv AS proizvod_naziv,
@@ -33,7 +34,7 @@ JOIN
 ORDER BY 
     pc.proizvod_id, pc.datum;
 
--- 3. Find the warehouses with the highest stock of each product.
+-- 3. Skladista s najvecim zalihama svakog proizvoda
 SELECT 
     sp.proizvod_id,
     p.naziv AS proizvod_naziv,
@@ -56,7 +57,7 @@ WHERE
             proizvod_id
     );
 
--- 4. List all orders with their total cost, including applied coupons and delivery costs.
+-- 4. Sve narudzbe s njihovom ukupnom cijenom, ukljucujuci primijenjene kupone i troskove dostave.
 SELECT 
     n.id AS narudzba_id,
     n.datum AS datum_narudzbe,
