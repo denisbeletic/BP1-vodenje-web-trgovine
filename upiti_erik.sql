@@ -5,7 +5,7 @@ SELECT
     p.naziv, 
     p.cijena, 
     SUM(np.kolicina) AS ukupna_kolicina
-FROM proizvod
+FROM proizvod p
 INNER JOIN narudzba_proizvod np ON p.id = np.proizvod_id
 INNER JOIN narudzba n ON np.narudzba_id = n.id
 WHERE n.datum >= DATE_SUB('2025-05-26 00:00:00', INTERVAL 30 DAY)
@@ -31,7 +31,7 @@ LEFT JOIN slika_proizvod spv ON p.id = spv.proizvod_id
 LEFT JOIN slika s ON spv.slika_id = s.id
 LEFT JOIN skladiste_proizvod sp ON p.id = sp.proizvod_id
 LEFT JOIN recenzija r ON p.id = r.proizvod_id
-LEFT JOIN korisnik ko ON r.korisnik_id = ku.id
+LEFT JOIN korisnik ko ON r.korisnik_id = ko.id
 WHERE p.id = 11 
 GROUP BY p.id;
 

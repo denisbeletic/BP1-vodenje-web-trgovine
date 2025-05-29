@@ -1,4 +1,4 @@
---Najaktivniji korisnici(30 dana)
+-- Najaktivniji korisnici(30 dana)
 CREATE OR REPLACE VIEW top_kupci_30_dana AS
 SELECT 
     k.id AS korisnik_id,
@@ -14,7 +14,7 @@ GROUP BY k.id, k.ime, k.prezime, k.email
 ORDER BY ukupna_potrosnja DESC
 LIMIT 10;
 
---Proizvodi bez narudžbi u zadnjih 60 dana
+-- Proizvodi bez narudžbi u zadnjih 60 dana
 CREATE OR REPLACE VIEW proizvodi_bez_narudzbi_60_dana AS
 SELECT 
     p.id,
@@ -27,7 +27,7 @@ LEFT JOIN narudzba n ON np.narudzba_id = n.id AND n.datum >= DATE_SUB('2025-05-2
 GROUP BY p.id, p.naziv, p.cijena
 HAVING COALESCE(SUM(np.kolicina), 0) = 0;
 
---Trenutni popusti po kuponima
+-- Trenutni popusti po kuponima
 CREATE OR REPLACE VIEW kupon_statistika AS
 SELECT
     k.id AS kupon_id,
@@ -42,7 +42,7 @@ LEFT JOIN kupon_narudzba kn ON k.id = kn.kupon_id
 WHERE k.status = 'aktivan'
 GROUP BY k.id, k.naziv, k.tip, k.vrijednost;
 
---Povijest zaliha za proizvod
+-- Povijest zaliha za proizvod
 CREATE OR REPLACE VIEW povijest_zaliha_proizvoda AS
 SELECT
     pz.proizvod_id,
