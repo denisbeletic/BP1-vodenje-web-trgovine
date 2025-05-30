@@ -9,7 +9,7 @@ FROM proizvod p
 INNER JOIN narudzba_proizvod np ON p.id = np.proizvod_id
 INNER JOIN narudzba n ON np.narudzba_id = n.id
 WHERE n.datum >= DATE_SUB('2025-05-26 00:00:00', INTERVAL 30 DAY)
-GROUP BY p.id, p.naziv, p.cijena
+GROUP BY p.id
 ORDER BY ukupna_kolicina DESC
 LIMIT 10;
 
@@ -32,8 +32,7 @@ LEFT JOIN slika s ON spv.slika_id = s.id
 LEFT JOIN skladiste_proizvod sp ON p.id = sp.proizvod_id
 LEFT JOIN recenzija r ON p.id = r.proizvod_id
 LEFT JOIN korisnik ko ON r.korisnik_id = ko.id
-WHERE p.id = 11 
-GROUP BY p.id;
+WHERE p.id = 11;
 
 -- Sve proizvode koji se najčešće prodaju zajedno s definiranim proizvodom
 CREATE OR REPLACE VIEW najcesce_kupljeno_zajedno AS
@@ -50,7 +49,6 @@ INNER JOIN
 WHERE
     np1.proizvod_id = 11
     AND np2.proizvod_id <> np1.proizvod_id
-    AND np2.kolicina > 0
 GROUP BY
     p2.id
 ORDER BY
@@ -72,7 +70,7 @@ LEFT JOIN recenzija r ON p.id = r.proizvod_id
 LEFT JOIN slika_proizvod spv ON p.id = spv.proizvod_id
 LEFT JOIN slika s ON spv.slika_id = s.id
 LEFT JOIN skladiste_proizvod sp ON p.id = sp.proizvod_id
-WHERE k.id = 1 AND p.cijena BETWEEN 100 AND 500
+WHERE k.id = 1 AND p.cijena BETWEEN 10000 AND 500000
 GROUP BY p.id
 ORDER BY p.cijena ASC, prosjecna_ocjena DESC;
 

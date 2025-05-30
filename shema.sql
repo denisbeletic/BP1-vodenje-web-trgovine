@@ -82,16 +82,6 @@ CREATE TABLE uplata (
     FOREIGN KEY (narudzba_id) REFERENCES narudzba(id)
 );
 
-CREATE TABLE recenzija (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    proizvod_id INT NOT NULL,
-    korisnik_id INT NOT NULL,
-    ocjena INT CHECK (ocjena >= 1 AND ocjena <= 5), -- Ocjena između 1 i 5
-    komentar VARCHAR(500),
-    datum DATETIME DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (proizvod_id) REFERENCES proizvod(id),
-    FOREIGN KEY (korisnik_id) REFERENCES korisnik(id)
-);
 
 -- Kuponi mogu imati različite tipove (fiksni iznos, postotak popusta, besplatna dostava)
 -- Fiksni iznos - određeni iznos koji se oduzima od ukupne cijene narudžbe
@@ -188,8 +178,8 @@ CREATE TABLE kurirska_sluzba (
 CREATE TABLE dostava (
     id INT AUTO_INCREMENT PRIMARY KEY,
     status ENUM('naručeno', 'u transportu', 'isporučeno') DEFAULT 'naručeno',
-    narudzba_id INT NOT NULL UNIQUE, -- Svaka narudžba može imati samo jednu dostavu
-    cijena INT NOT NULL, -- Cijena dostave u centima
+    narudzba_id INT NOT NULL UNIQUE,
+    cijena INT NOT NULL,
     opis VARCHAR(500),
     datum_kreiranja DATETIME DEFAULT CURRENT_TIMESTAMP,
     datum_slanja DATETIME,
@@ -197,4 +187,15 @@ CREATE TABLE dostava (
     kurirska_sluzba_id INT NOT NULL,
     FOREIGN KEY (narudzba_id) REFERENCES narudzba(id),
     FOREIGN KEY (kurirska_sluzba_id) REFERENCES kurirska_sluzba(id)
+);
+
+CREATE TABLE recenzija (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    proizvod_id INT NOT NULL,
+    korisnik_id INT NOT NULL,
+    ocjena INT CHECK (ocjena >= 1 AND ocjena <= 5),
+    komentar VARCHAR(500),
+    datum DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (proizvod_id) REFERENCES proizvod(id),
+    FOREIGN KEY (korisnik_id) REFERENCES korisnik(id)
 );
