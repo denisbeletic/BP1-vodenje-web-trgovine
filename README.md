@@ -5,6 +5,7 @@ Projekt napravljen u sklopu kolegija 'Baze podataka 1' - sustav za vođenje web 
 
 Ovaj vodič objašnjava kako postaviti i pokrenuti projekt baze podataka za web trgovinu. Projekt koristi MySQL i sastoji se od SQL skripti za definiranje sheme baze podataka i učitavanje podataka iz CSV datoteka ili manualno kroz INSERT-ove.
 
+---
 
 Slijedite ove korake za postavljanje projekta kroz **INSERT-ove**:
 
@@ -17,6 +18,8 @@ Slijedite ove korake za postavljanje projekta kroz **INSERT-ove**:
     *   Izvršite cijelu skriptu `shema.sql`. Ovo će stvoriti bazu podataka `web_trgovina_bp1` i sve potrebne tablice.
     *   Nakon uspješnog izvršavanja `shema.sql`, otvorite SQL skriptu `insert_data.sql`.
     *   Izvršite cijelu skriptu `insert_data.sql`. Ovo će popuniti tablice podacima s vrijednostima iz INSERT-ova.
+
+---
 
 Slijedite ove korake za postavljanje projekta kroz **CSV datoteke**:
 

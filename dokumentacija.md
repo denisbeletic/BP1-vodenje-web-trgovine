@@ -824,7 +824,7 @@ SELECT
 FROM povijest_zaliha pz
 JOIN proizvod p ON p.id = pz.proizvod_id
 JOIN skladiste s ON s.id = pz.skladiste_id
-WHERE pz.proizvod_id = 5 -- zamijeniti po potrebi
+WHERE pz.proizvod_id = 5
 ORDER BY pz.datum DESC;
 ```
 
@@ -882,13 +882,13 @@ ORDER BY ukupna_zarada DESC;
 
 #### Upit 3:
 
-Upit "Pregleda proizvoda s ukupnom zaradom i brojem skladišta u kojima se nalaze".
+Upit "Pregled korisnika koji su koristili više različitih kupona".
 
-"zarada_i_skladista_po_proizvodu" spaja podatke iz tablica "proizvod", "narudzba_proizvod" i "skladiste_proizvod" s krajnjim rezultatom prikazivanja ukupne zarade po proizvodu i po broja skladišta u kojima se proizvod nalazi.
+"korisnici_s_razlicitim_kuponima" spaja podatke iz tablica "korisnik", "narudzba", "kupon_narudzba" i "kupon" kako bi prikazao korisnike koji su koristili više od jednog različitog kupona u svojim narudžbama.
 
-"SELECT-om" dohvaćamo osnovne informacije o proizvodu, dok "SUM (np.kolicina * np.cijena)" računa ukupnu zaradu, a  "COUNT (DISCTINCT sp.skladiste_id)" broj skladišta.
+"SELECT-om" dohvaćamo osnovne informacije o korisniku, uključujući njegov ID, ime i prezime, broj različitih kupona koje je koristio te popis naziva tih kupona. Funkcija "COUNT(DISTINCT kn.kupon_id)" računa broj jedinstvenih kupona, dok "GROUP_CONCAT(DISTINCT ku.naziv)" dohvaća nazive kupona i formatira ih u jedan string.
 
-Koristimo "LEFT JOIN" kako bi prikazali i time uračunali, one proizvode koji se možda ne nalaze u skladištima ili nisu još naručeni. Grupiramo podatke po ID-u proizvoda, a sortiramo po ukupnoj zaradi kako bi lakše vidjeli koji proizvodi dovode najveću zaradu.
+Koristimo "JOIN" za spajanje tablica kako bismo povezali korisnike s njihovim narudžbama i kuponima. Grupiramo podatke po ID-u korisnika, a "HAVING" filtrira rezultate kako bi prikazao samo korisnike koji su koristili više od jednog kupona. Rezultat se sortira prema broju različitih kupona u opadajućem redoslijedu.
 
 ```sql
 SELECT 
