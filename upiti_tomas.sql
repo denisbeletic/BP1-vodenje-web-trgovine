@@ -13,7 +13,7 @@ GROUP BY
 HAVING 
     ukupna_potrosnja > 50000
 ORDER BY 
-    ukupna_potrosnja DESC;
+    ukupna_potrosnja DESC; 
 
 -- 2. Povijest cijena proizvoda i izracun postotnu promjenu izmedu uzastopnih cijena
 
@@ -63,8 +63,8 @@ SELECT
     n.datum AS datum_narudzbe,
     n.ukupni_iznos AS ukupni_iznos_proizvoda,
     IFNULL(k.vrijednost, 0) AS vrijednost_kupona,
-    d.cijena AS cijena_dostave,
-    (n.ukupni_iznos - IFNULL(k.vrijednost, 0) + d.cijena) AS ukupni_trosak
+    IFNULL(d.cijena, 0) AS cijena_dostave,
+    (n.ukupni_iznos - IFNULL(k.vrijednost, 0) + IFNULL(d.cijena, 0)) AS ukupni_trosak
 FROM 
     narudzba n
 LEFT JOIN 
